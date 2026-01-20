@@ -3,3 +3,7 @@ __pycache__/
 .idea/
 .vscode/
 
+# Deployment temporary files
+/tmp/deployment-plan.md
+/tmp/pr-template.md
+
