@@ -15,7 +15,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-GOOGLE_DRIVE_PATH="${HOME}/Library/CloudStorage/GoogleDrive-/My Drive/✴️Claude/Claude_skills"
+GOOGLE_DRIVE_PATH="${CLAUDE_SKILLS_DRIVE_PATH:-${HOME}/Library/CloudStorage/GoogleDrive-/My Drive/✴️Claude/Claude_skills}"
 REPO_SKILLS_PATH="./skills"
 CLAUDE_SKILLS_PATH="./.claude/skills"
 DRY_RUN=false
@@ -92,7 +92,7 @@ echo ""
 
 # Show what will be copied
 echo "Files to copy:"
-ls -lh "$SOURCE_PATH" | grep -v "^total" | awk '{print "  " $9 " (" $5 ")"}'
+find "$SOURCE_PATH" -maxdepth 1 -type f -exec sh -c 'basename "$1" && du -h "$1" | cut -f1' _ {} \; | paste -d ' ' - - | awk '{print "  " $1 " (" $2 ")"}'
 echo ""
 
 # Perform deployment

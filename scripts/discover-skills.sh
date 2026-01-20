@@ -15,7 +15,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-GOOGLE_DRIVE_PATH="${HOME}/Library/CloudStorage/GoogleDrive-/My Drive/✴️Claude/Claude_skills"
+GOOGLE_DRIVE_PATH="${CLAUDE_SKILLS_DRIVE_PATH:-${HOME}/Library/CloudStorage/GoogleDrive-/My Drive/✴️Claude/Claude_skills}"
 REPO_SKILLS_PATH="./skills"
 VERBOSE=false
 
@@ -73,9 +73,9 @@ echo ""
 # Find new skills
 echo "═══ Skills in Google Drive ═══"
 if [ "$VERBOSE" = true ]; then
-    ls -la "$GOOGLE_DRIVE_PATH" | grep "^d" | grep -v "^\.$" | grep -v "^\.\.$" | awk '{print "  " $NF}'
+    find "$GOOGLE_DRIVE_PATH" -mindepth 1 -maxdepth 1 -type d ! -name ".*" -exec basename {} \; | sed 's/^/  /'
 else
-    ls "$GOOGLE_DRIVE_PATH" | grep -v "^\." | sed 's/^/  /'
+    find "$GOOGLE_DRIVE_PATH" -mindepth 1 -maxdepth 1 -type d ! -name ".*" -exec basename {} \; | sed 's/^/  /'
 fi
 echo ""
 
@@ -109,7 +109,9 @@ for skill_dir in "$GOOGLE_DRIVE_PATH"/*; do
         HAS_CHANGELOG=false
         HAS_JSON=false
         
-        if [ -f "$skill_dir/SKILL.md" ] || ls "$skill_dir"/*SKILL*.md &>/dev/null; then
+        if [ -f "$skill_dir/SKILL.md" ]; then
+            HAS_SKILL_MD=true
+        elif compgen -G "$skill_dir/*SKILL*.md" > /dev/null; then
             HAS_SKILL_MD=true
         fi
         
@@ -121,7 +123,7 @@ for skill_dir in "$GOOGLE_DRIVE_PATH"/*; do
             HAS_CHANGELOG=true
         fi
         
-        if ls "$skill_dir"/*.json &>/dev/null; then
+        if compgen -G "$skill_dir/*.json" > /dev/null; then
             HAS_JSON=true
         fi
         

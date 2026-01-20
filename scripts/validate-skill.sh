@@ -43,7 +43,9 @@ echo ""
 VALIDATION_PASSED=true
 
 # Check for SKILL.md
-if [ -f "$SKILL_PATH/SKILL.md" ] || ls "$SKILL_PATH"/*SKILL*.md &>/dev/null; then
+if [ -f "$SKILL_PATH/SKILL.md" ]; then
+    echo -e "${GREEN}✓${NC} SKILL.md found"
+elif compgen -G "$SKILL_PATH/*SKILL*.md" > /dev/null; then
     echo -e "${GREEN}✓${NC} SKILL.md found"
 else
     echo -e "${RED}✗${NC} SKILL.md MISSING (REQUIRED)"
@@ -66,9 +68,9 @@ else
 fi
 
 # Check for data payload
-if ls "$SKILL_PATH"/*.json &>/dev/null; then
+if compgen -G "$SKILL_PATH/*.json" > /dev/null; then
     echo -e "${GREEN}✓${NC} Data payload found"
-    ls "$SKILL_PATH"/*.json | sed 's/^/    /'
+    find "$SKILL_PATH" -maxdepth 1 -name "*.json" -type f -exec basename {} \; | sed 's/^/    /'
 else
     echo -e "${YELLOW}○${NC} Data payload optional"
 fi
@@ -77,7 +79,7 @@ echo ""
 
 # List all files in skill directory
 echo "Files in skill directory:"
-ls -lh "$SKILL_PATH" | grep -v "^total" | awk '{print "  " $9 " (" $5 ")"}'
+find "$SKILL_PATH" -maxdepth 1 -type f -exec sh -c 'basename "$1" && du -h "$1" | cut -f1' _ {} \; | paste -d ' ' - - | awk '{print "  " $1 " (" $2 ")"}'
 
 echo ""
 echo "════════════════════════════════════════════════════════════════"
