@@ -87,6 +87,42 @@ The frontmatter requires only two fields:
 
 The markdown content below contains the instructions, examples, and guidelines that Claude will follow. For more details, see [How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills).
 
+# Skill Deployment Workflow
+
+This repository includes an automated workflow for deploying skills from Google Drive to the repository. This is particularly useful for the `allsxxing/skills` fork for managing custom skill deployments.
+
+## Quick Start
+
+```bash
+# Discover new skills in Google Drive
+./scripts/discover-skills.sh
+
+# Validate a specific skill
+./scripts/validate-skill.sh <path-to-skill>
+
+# Deploy a skill
+./scripts/deploy-skill.sh <skill-name> [--dry-run]
+```
+
+## Documentation
+
+- **[Deployment Workflow Guide](./docs/DEPLOYMENT_WORKFLOW.md)** - Complete guide for deploying skills from Google Drive
+- **[Skill Registry](./docs/SKILL_REGISTRY.md)** - Track all deployed skills and their status
+- **[PR Template](./.github/pull_request_template.md)** - Template for skill deployment pull requests
+
+## Repository Structure
+
+```
+allsxxing/skills/
+├── skills/                    # Skill definitions
+├── .claude/skills/            # Local Claude Code integration (symlinks)
+├── scripts/                   # Deployment automation scripts
+├── docs/                      # Deployment documentation
+└── .github/                   # GitHub workflows and templates
+```
+
+For detailed information about the deployment workflow, see [docs/DEPLOYMENT_WORKFLOW.md](./docs/DEPLOYMENT_WORKFLOW.md).
+
 # Partner Skills
 
 Skills are a great way to teach Claude how to get better at using specific pieces of software. As we see awesome example skills from partners, we may highlight some of them here:
