@@ -101,8 +101,8 @@ curl -I https://github.com
 
 ### Dependency Issues
 
-Reinstall dependencies if scripts fail:
+Reinstall dependencies by running the setup script:
 
 ```bash
-pip install -r requirements.txt
+bash scripts/setup-codespaces.sh
 ```

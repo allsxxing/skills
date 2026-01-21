@@ -12,10 +12,10 @@ Examples:
 """
 
 import argparse
-import os
 import shutil
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -33,11 +33,27 @@ def is_skill_package(path: str) -> bool:
     return path.endswith(".skill")
 
 
-def download_file(url: str, dest: Path) -> None:
-    """Download a file from URL to destination."""
+def download_file(url: str, dest: Path, timeout: int = 60) -> None:
+    """Download a file from URL to destination with timeout."""
     print(f"Downloading from {url}...")
-    urllib.request.urlretrieve(url, dest)
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            with open(dest, "wb") as out_file:
+                shutil.copyfileobj(response, out_file)
+    except urllib.error.URLError as e:
+        raise RuntimeError(f"Failed to download {url}: {e}")
     print(f"Downloaded to {dest}")
+
+
+def safe_extract_zip(zf: zipfile.ZipFile, target_dir: Path) -> None:
+    """Safely extract zip file, preventing zip slip attacks."""
+    target_dir = target_dir.resolve()
+    for member in zf.namelist():
+        member_path = (target_dir / member).resolve()
+        # Ensure the extracted file stays within target directory
+        if not str(member_path).startswith(str(target_dir)):
+            raise ValueError(f"Zip slip attack detected: {member}")
+    zf.extractall(target_dir)
 
 
 def extract_skill_package(package_path: Path, output_dir: Path) -> Path:
@@ -48,7 +64,7 @@ def extract_skill_package(package_path: Path, output_dir: Path) -> Path:
         skill_name = package_path.stem
         skill_dir = output_dir / skill_name
         skill_dir.mkdir(parents=True, exist_ok=True)
-        zf.extractall(skill_dir)
+        safe_extract_zip(zf, skill_dir)
     print(f"Extracted to {skill_dir}")
     return skill_dir
 
@@ -99,8 +115,9 @@ def pull_from_github(url: str, output_dir: Path) -> Path:
 
         # Extract the archive
         extract_dir = tmp_path / "extracted"
+        extract_dir.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(zip_path, "r") as zf:
-            zf.extractall(extract_dir)
+            safe_extract_zip(zf, extract_dir)
 
         # Find the skill directory within the extracted content
         repo_dir = extract_dir / f"{repo}-{branch}"
