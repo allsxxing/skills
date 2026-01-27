@@ -1,0 +1,29 @@
+{
+  "name": "agent-skills",
+  "version": "1.0.0",
+  "description": "CLI for installing Agent Skills from GitHub repositories",
+  "main": "index.js",
+  "bin": {
+    "skills": "./bin/skills.js"
+  },
+  "scripts": {
+    "test": "node bin/skills.js --help"
+  },
+  "keywords": [
+    "agent",
+    "skills",
+    "claude",
+    "anthropic",
+    "ai",
+    "cli"
+  ],
+  "author": "Anthropic",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/skills.git"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
