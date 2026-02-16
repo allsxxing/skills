@@ -40,6 +40,28 @@
         "./skills/web-artifacts-builder",
         "./skills/webapp-testing"
       ]
+    },
+    {
+      "name": "superpowers-skills",
+      "description": "obra/superpowers v4.3.0: TDD, systematic debugging, brainstorming, planning, code review, and collaboration patterns (MIT, by Jesse Vincent)",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./.agents/skills/superpowers/skills/brainstorming",
+        "./.agents/skills/superpowers/skills/dispatching-parallel-agents",
+        "./.agents/skills/superpowers/skills/executing-plans",
+        "./.agents/skills/superpowers/skills/finishing-a-development-branch",
+        "./.agents/skills/superpowers/skills/receiving-code-review",
+        "./.agents/skills/superpowers/skills/requesting-code-review",
+        "./.agents/skills/superpowers/skills/subagent-driven-development",
+        "./.agents/skills/superpowers/skills/systematic-debugging",
+        "./.agents/skills/superpowers/skills/test-driven-development",
+        "./.agents/skills/superpowers/skills/using-git-worktrees",
+        "./.agents/skills/superpowers/skills/using-superpowers",
+        "./.agents/skills/superpowers/skills/verification-before-completion",
+        "./.agents/skills/superpowers/skills/writing-plans",
+        "./.agents/skills/superpowers/skills/writing-skills"
+      ]
     }
   ]
 }
