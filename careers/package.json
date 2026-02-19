@@ -1,0 +1,30 @@
+{
+  "name": "xai-careers-mcp-server",
+  "version": "1.0.0",
+  "description": "Real-time MCP knowledge base for all remote roles at x.ai",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "xai-careers-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "scrape": "node scraper.js",
+    "build": "echo 'No build step — pure JS'"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "better-sqlite3": "^12.6.0",
+    "dotenv": "^16.4.0",
+    "playwright": "1.56.0",
+    "slugify": "^1.6.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
