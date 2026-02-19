@@ -1,1 +1,35 @@
-# GitHub Actions cron scrape sync — to be implemented in Phase 8
+name: xAI Careers Scrape Sync
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'     # every 6 hours UTC
+  workflow_dispatch:            # manual trigger from GitHub UI
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd careers && npm install
+
+      - name: Install Playwright Chromium
+        run: cd careers && npx playwright install chromium --with-deps
+
+      - name: Run scraper
+        run: cd careers && npm run scrape
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "allsxxing-bot"
+          git config user.email "actions@allsxxing.com"
+          git add careers/data/snapshots/
+          git diff --cached --quiet || git commit -m "scrape: xAI careers sync $(date -u +%Y%m%d_%H%M%S) [skip ci]"
+          git push
