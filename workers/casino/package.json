@@ -1,0 +1,16 @@
+{
+  "name": "casino",
+  "version": "3.0.0",
+  "description": "Mom's Casino Bus Protocol — Cloudflare Worker | ALL SEEING EYES · GG33 System",
+  "main": "src/worker.js",
+  "scripts": {
+    "dev": "wrangler dev --test-scheduled",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  },
+  "author": "GJ Bordallo <gjbordallo@icloud.com>",
+  "license": "MIT"
+}
