@@ -1,0 +1,250 @@
+[
+  {
+    "name": "codespaces-optimizer",
+    "summary": "Optimizes responses for GitHub Codespaces workflows with direct commands, cloud-first approach, and zero local installs",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "dfs-parlaypro",
+    "summary": "Use for live DFS player props and parlay builds (PrizePicks, Underdog, Betr) via /parlay, /props, or slate requests; runs verified de-vig +EV math, correlation checks, and tiered slip construction.",
+    "canonical": {
+      "platform": "claude",
+      "version": "3.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "3.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "league-tone",
+    "summary": "Draft all Sleeper / 10 FOR $10 / FantasyX league communication in GJ Bordallo exact H-Town trill tone. Use for recruitment DMs, run-it-back messages, commissioner notes, announcements, dues reminders, X Champion posts, weekly recaps, chat templates, and any league manager outreach. Triggers on league DM, recruit message, commissioner note, league announcement, dues note, X crowning, preseason tease, or any request to write league-related communication.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "mom-casino-bus-protocol",
+    "summary": "Generates a fully personalized, date-specific Casino Bus Night schedule for Mom (Coco) using GG33 numerology, live lunar data, and current astrological transits. Outputs a shareable HTML card styled with the Coco design system — frosted glass cards on a vivid gradient background, animated color spectrum shimmer bars, all windows pre-expanded, download + share buttons included. Deploys automatically to https://casino.all-seeing-eyes.workers.dev/ via Cloudflare Workers Builds (Git-connected CI/CD). Cron triggers fire every Thu/Fri/Sat at noon CT to align with Mom's weekly bus schedule. Use this skill whenever the user says \"run the casino protocol\", \"casino bus\", \"Mom's schedule\", \"generate Coco's night\", or any similar phrase. Always trigger for casino, bus trip, or Mom's night-out scheduling requests.",
+    "canonical": {
+      "platform": "claude",
+      "version": "3.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "3.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "promo-code-hunter",
+    "summary": "Live promo code and deal finder for any app or subscription. Auto-runs web search across Reddit, X/Twitter, LinkedIn, AI aggregators, AppSumo, Product Hunt, and official brand pages to surface ACTIVE, verified discount codes and offers. Use this skill whenever the user asks about promo codes, discount codes, deals, coupons, or ways to save on any app, SaaS tool, subscription, or software. Also trigger when user says things like \"is there a deal for X\", \"how do I get X cheaper\", \"any codes for X\", \"save on X\", or \"lifetime deal for X\". ALWAYS trigger immediately when the user's message starts with or contains /promo, /promos, or /offers. If no app is specified, ask before searching.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "prompt-engineer",
+    "summary": "Automatically upgrades any raw or weak prompt into an expertly engineered, high-performance version. Use when the user says improve this prompt, optimize prompt, engineer this prompt, rewrite prompt, better prompt for, prompt upgrade, enhance my prompt, make this prompt better, or pastes a rough task and wants a production-ready version. Outputs the final engineered prompt inside a clean codeblock, optimized for the target AI platform or agent (Grok, Claude, GPT, Gemini, Midjourney, Flux, Runway, Cursor, custom agents, etc.).",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "skill-sync",
+    "summary": "Keeps every skill GJ builds in sync across Claude, Gemini, Grok, and Perplexity through the allsxxing/skills GitHub registry. Use when a skill is created or updated in any app, when GJ pastes a skill from Gemini, Grok, or Perplexity, when he asks which platform copies are outdated, or wants a skill ported to another platform. Triggers on /skillsync, /skills, sync skill, save skill to repo, push skill, port skill to Gemini/Grok/Perplexity, skill status, what's outdated, or the end of any skill-creator session.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  },
+  {
+    "name": "xai-assessment-protocol",
+    "summary": "Mobile-optimized quick reference for xAI Vision Assessment. Provides copy-paste ready content for career goals, inspiration pieces, personal portfolio, and combat protocols. Use when user says \"Run the xAI Assessment Cheat Sheet protocol\" or needs xAI assessment support during 90-minute assessment.",
+    "canonical": {
+      "platform": "claude",
+      "version": "3.0.0",
+      "updated": "2026-10-31"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "3.0.0",
+        "updated": "2026-10-31"
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null
+      }
+    }
+  }
+]

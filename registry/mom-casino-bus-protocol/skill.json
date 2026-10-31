@@ -1,0 +1,25 @@
+{
+  "name": "mom-casino-bus-protocol",
+  "summary": "Generates a fully personalized, date-specific Casino Bus Night schedule for Mom (Coco) using GG33 numerology, live lunar data, and current astrological transits. Outputs a shareable HTML card styled with the Coco design system — frosted glass cards on a vivid gradient background, animated color spectrum shimmer bars, all windows pre-expanded, download + share buttons included. Deploys automatically to https://casino.all-seeing-eyes.workers.dev/ via Cloudflare Workers Builds (Git-connected CI/CD). Cron triggers fire every Thu/Fri/Sat at noon CT to align with Mom's weekly bus schedule. Use this skill whenever the user says \"run the casino protocol\", \"casino bus\", \"Mom's schedule\", \"generate Coco's night\", or any similar phrase. Always trigger for casino, bus trip, or Mom's night-out scheduling requests.",
+  "canonical": {
+    "platform": "claude",
+    "version": "3.0.0",
+    "updated": "2026-10-31"
+  },
+  "platforms": {
+    "claude": {
+      "version": "3.0.0",
+      "updated": "2026-10-31",
+      "hash": "d66a92747621",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "3.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Imported v3.0 (10 modules) from repo. Claude.ai account is still on v2.0 SKILL.md only: re-upload."
+    }
+  ]
+}

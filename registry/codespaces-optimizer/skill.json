@@ -1,0 +1,25 @@
+{
+  "name": "codespaces-optimizer",
+  "summary": "Optimizes responses for GitHub Codespaces workflows with direct commands, cloud-first approach, and zero local installs",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-10-31"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-10-31",
+      "hash": "d4693ca71106",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Imported from GJ's Claude account"
+    }
+  ]
+}

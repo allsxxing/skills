@@ -1,0 +1,25 @@
+{
+  "name": "prompt-engineer",
+  "summary": "Automatically upgrades any raw or weak prompt into an expertly engineered, high-performance version. Use when the user says improve this prompt, optimize prompt, engineer this prompt, rewrite prompt, better prompt for, prompt upgrade, enhance my prompt, make this prompt better, or pastes a rough task and wants a production-ready version. Outputs the final engineered prompt inside a clean codeblock, optimized for the target AI platform or agent (Grok, Claude, GPT, Gemini, Midjourney, Flux, Runway, Cursor, custom agents, etc.).",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-10-31"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-10-31",
+      "hash": "1d482914fe50",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Imported from GJ's Claude account"
+    }
+  ]
+}

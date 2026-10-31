@@ -40,6 +40,22 @@
         "./skills/web-artifacts-builder",
         "./skills/webapp-testing"
       ]
+    },
+    {
+      "name": "all-seeing-eyes",
+      "description": "ALL SEEING EYES (@allsxxingeyes) custom skills, auto-built from registry/",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./dist/claude/codespaces-optimizer",
+        "./dist/claude/dfs-parlaypro",
+        "./dist/claude/league-tone",
+        "./dist/claude/mom-casino-bus-protocol",
+        "./dist/claude/promo-code-hunter",
+        "./dist/claude/prompt-engineer",
+        "./dist/claude/skill-sync",
+        "./dist/claude/xai-assessment-protocol"
+      ]
     }
   ]
 }

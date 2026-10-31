@@ -1,0 +1,25 @@
+{
+  "name": "promo-code-hunter",
+  "summary": "Live promo code and deal finder for any app or subscription. Auto-runs web search across Reddit, X/Twitter, LinkedIn, AI aggregators, AppSumo, Product Hunt, and official brand pages to surface ACTIVE, verified discount codes and offers. Use this skill whenever the user asks about promo codes, discount codes, deals, coupons, or ways to save on any app, SaaS tool, subscription, or software. Also trigger when user says things like \"is there a deal for X\", \"how do I get X cheaper\", \"any codes for X\", \"save on X\", or \"lifetime deal for X\". ALWAYS trigger immediately when the user's message starts with or contains /promo, /promos, or /offers. If no app is specified, ask before searching.",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-10-31"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-10-31",
+      "hash": "051c55ce3c11",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Imported from GJ's Claude account"
+    }
+  ]
+}

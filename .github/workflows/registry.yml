@@ -1,0 +1,56 @@
+name: Skill Registry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "registry/**"
+      - "tools/registry.py"
+  pull_request:
+    paths:
+      - "registry/**"
+      - "tools/registry.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Record hashes for copies bumped without one
+        run: |
+          python - <<'EOF'
+          import json, sys
+          sys.path.insert(0, "tools")
+          import registry as r
+          for sd in r.skills():
+              d = r.load(sd)
+              changed = False
+              for p, meta in d["platforms"].items():
+                  if meta.get("version") and not meta.get("hash"):
+                      meta["hash"] = r.dir_hash(sd / "platforms" / p)
+                      changed = True
+              if changed:
+                  r.save(sd, d)
+          EOF
+
+      - name: Rebuild status, index, and Claude Code plugin
+        run: python tools/registry.py status --check
+
+      - name: Commit generated files
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add registry dist .claude-plugin/marketplace.json
+          git diff --cached --quiet || git commit -m "registry: rebuild status [bot]"
+          git push
