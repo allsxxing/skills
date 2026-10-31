@@ -1,0 +1,25 @@
+{
+  "name": "dfs-parlaypro",
+  "summary": "Use for live DFS player props and parlay builds (PrizePicks, Underdog, Betr) via /parlay, /props, or slate requests; runs verified de-vig +EV math, correlation checks, and tiered slip construction.",
+  "canonical": {
+    "platform": "claude",
+    "version": "3.0.0",
+    "updated": "2026-10-31"
+  },
+  "platforms": {
+    "claude": {
+      "version": "3.0.0",
+      "updated": "2026-10-31",
+      "hash": "8916cf22c7c3",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "3.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Imported from GJ's Claude account"
+    }
+  ]
+}

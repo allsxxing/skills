@@ -1,0 +1,25 @@
+{
+  "name": "xai-assessment-protocol",
+  "summary": "Mobile-optimized quick reference for xAI Vision Assessment. Provides copy-paste ready content for career goals, inspiration pieces, personal portfolio, and combat protocols. Use when user says \"Run the xAI Assessment Cheat Sheet protocol\" or needs xAI assessment support during 90-minute assessment.",
+  "canonical": {
+    "platform": "claude",
+    "version": "3.0.0",
+    "updated": "2026-10-31"
+  },
+  "platforms": {
+    "claude": {
+      "version": "3.0.0",
+      "updated": "2026-10-31",
+      "hash": "4c401abe85c4",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "3.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Imported from GJ's Claude account"
+    }
+  ]
+}
