@@ -30,5 +30,6 @@
     "mcp-handler": {
       "@modelcontextprotocol/sdk": "$@modelcontextprotocol/sdk"
     }
-  }
+  },
+  "packageManager": "npm@10.9.9"
 }
