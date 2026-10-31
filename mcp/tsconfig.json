@@ -37,10 +37,6 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "skills",
-    "workers",
-    "dist",
-    "registry"
+    "node_modules"
   ]
 }

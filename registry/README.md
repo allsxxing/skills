@@ -6,7 +6,7 @@ Live dashboard: [STATUS.md](STATUS.md)
 
 ## The MCP connector
 
-The registry is served as an MCP server from `mcp/`, deployed on Vercel from this repo:
+The registry is served as an MCP server from `mcp/` (Next.js, deployed on Vercel with Root Directory set to `mcp`):
 
 ```
 https://skills-allsxxing.vercel.app/api/mcp            read-only

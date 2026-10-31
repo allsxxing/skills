@@ -7,8 +7,7 @@
     "prebuild": "node scripts/bundle-registry.mjs",
     "build": "next build",
     "dev": "node scripts/bundle-registry.mjs && next dev",
-    "start": "next start",
-    "registry": "python3 tools/registry.py status"
+    "start": "next start"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.0",

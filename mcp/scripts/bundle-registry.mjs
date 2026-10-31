@@ -5,7 +5,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const src = resolve(here, "../registry/bundle.json");
+const src = resolve(here, "../../registry/bundle.json");
 const dest = resolve(here, "../src/data/bundle.json");
 mkdirSync(dirname(dest), { recursive: true });
 

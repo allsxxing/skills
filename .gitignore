@@ -6,6 +6,6 @@ __pycache__/
 node_modules/
 .next/
 next-env.d.ts
-src/data/bundle.json
+mcp/src/data/bundle.json
 *.tsbuildinfo
 .vercel
