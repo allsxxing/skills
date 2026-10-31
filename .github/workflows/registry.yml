@@ -15,35 +15,36 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: registry-${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
+  cancel-in-progress: false
+
 jobs:
   rebuild:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Record hashes for copies bumped without one
+      # Copies saved without a hash get one, but only when their version moved since the base
+      # commit. Changed files with an unchanged version fail the build.
+      - name: Record hashes for newly versioned copies
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
-          python - <<'EOF'
-          import json, sys
-          sys.path.insert(0, "tools")
-          import registry as r
-          for sd in r.skills():
-              d = r.load(sd)
-              changed = False
-              for p, meta in d["platforms"].items():
-                  if meta.get("version") and not meta.get("hash"):
-                      meta["hash"] = r.dir_hash(sd / "platforms" / p)
-                      changed = True
-              if changed:
-                  r.save(sd, d)
-          EOF
+          if [ -n "$BASE" ] && git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            python tools/registry.py fill-hashes --base "$BASE"
+          else
+            python tools/registry.py fill-hashes
+          fi
 
-      - name: Rebuild status, index, and Claude Code plugin
+      - name: Rebuild status, index, bundle, and Claude Code plugin
         run: python tools/registry.py status --check
 
       - name: Commit generated files
@@ -53,4 +54,5 @@ jobs:
           git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
           git add registry dist .claude-plugin/marketplace.json
           git diff --cached --quiet || git commit -m "registry: rebuild status [bot]"
+          git pull --rebase -q origin main
           git push

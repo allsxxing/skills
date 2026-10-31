@@ -3,3 +3,9 @@ __pycache__/
 .idea/
 .vscode/
 
+node_modules/
+.next/
+next-env.d.ts
+src/data/bundle.json
+*.tsbuildinfo
+.vercel

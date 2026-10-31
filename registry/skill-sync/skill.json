@@ -3,18 +3,24 @@
   "summary": "Keeps every skill GJ builds in sync across Claude, Gemini, Grok, and Perplexity through the allsxxing/skills GitHub registry. Use when a skill is created or updated in any app, when GJ pastes a skill from Gemini, Grok, or Perplexity, when he asks which platform copies are outdated, or wants a skill ported to another platform. Triggers on /skillsync, /skills, sync skill, save skill to repo, push skill, port skill to Gemini/Grok/Perplexity, skill status, what's outdated, or the end of any skill-creator session.",
   "canonical": {
     "platform": "claude",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "updated": "2026-10-31"
   },
   "platforms": {
     "claude": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "updated": "2026-10-31",
-      "hash": "0235776d4943",
+      "hash": "da5c195d49aa",
       "entry": "SKILL.md"
     }
   },
   "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Runs through the allsxxing/skills MCP; versioning moved server-side"
+    },
     {
       "version": "1.0.0",
       "date": "2026-10-31",

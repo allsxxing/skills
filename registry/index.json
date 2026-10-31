@@ -11,22 +11,26 @@
       "claude": {
         "state": "current",
         "version": "1.0.0",
-        "updated": "2026-10-31"
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -42,22 +46,26 @@
       "claude": {
         "state": "current",
         "version": "3.0.0",
-        "updated": "2026-10-31"
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -66,29 +74,33 @@
     "summary": "Draft all Sleeper / 10 FOR $10 / FantasyX league communication in GJ Bordallo exact H-Town trill tone. Use for recruitment DMs, run-it-back messages, commissioner notes, announcements, dues reminders, X Champion posts, weekly recaps, chat templates, and any league manager outreach. Triggers on league DM, recruit message, commissioner note, league announcement, dues note, X crowning, preseason tease, or any request to write league-related communication.",
     "canonical": {
       "platform": "claude",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "updated": "2026-10-31"
     },
     "platforms": {
       "claude": {
         "state": "current",
-        "version": "1.0.0",
-        "updated": "2026-10-31"
+        "version": "2.0.0",
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -104,22 +116,26 @@
       "claude": {
         "state": "current",
         "version": "3.0.0",
-        "updated": "2026-10-31"
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -135,22 +151,26 @@
       "claude": {
         "state": "current",
         "version": "1.0.0",
-        "updated": "2026-10-31"
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -166,22 +186,26 @@
       "claude": {
         "state": "current",
         "version": "1.0.0",
-        "updated": "2026-10-31"
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -190,29 +214,33 @@
     "summary": "Keeps every skill GJ builds in sync across Claude, Gemini, Grok, and Perplexity through the allsxxing/skills GitHub registry. Use when a skill is created or updated in any app, when GJ pastes a skill from Gemini, Grok, or Perplexity, when he asks which platform copies are outdated, or wants a skill ported to another platform. Triggers on /skillsync, /skills, sync skill, save skill to repo, push skill, port skill to Gemini/Grok/Perplexity, skill status, what's outdated, or the end of any skill-creator session.",
     "canonical": {
       "platform": "claude",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "updated": "2026-10-31"
     },
     "platforms": {
       "claude": {
         "state": "current",
-        "version": "1.0.0",
-        "updated": "2026-10-31"
+        "version": "2.0.0",
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   },
@@ -228,22 +256,26 @@
       "claude": {
         "state": "current",
         "version": "3.0.0",
-        "updated": "2026-10-31"
+        "updated": "2026-10-31",
+        "synced_from": null
       },
       "gemini": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "grok": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       },
       "perplexity": {
         "state": "missing",
         "version": null,
-        "updated": null
+        "updated": null,
+        "synced_from": null
       }
     }
   }

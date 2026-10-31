@@ -3,18 +3,24 @@
   "summary": "Draft all Sleeper / 10 FOR $10 / FantasyX league communication in GJ Bordallo exact H-Town trill tone. Use for recruitment DMs, run-it-back messages, commissioner notes, announcements, dues reminders, X Champion posts, weekly recaps, chat templates, and any league manager outreach. Triggers on league DM, recruit message, commissioner note, league announcement, dues note, X crowning, preseason tease, or any request to write league-related communication.",
   "canonical": {
     "platform": "claude",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "updated": "2026-10-31"
   },
   "platforms": {
     "claude": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "updated": "2026-10-31",
-      "hash": "278b15d96309",
+      "hash": "7eb47f4e9554",
       "entry": "SKILL.md"
     }
   },
   "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-10-31",
+      "platform": "claude",
+      "note": "Oct 17 rebuild from fantasyx-mcp repo (facts, voice, learning log, evals, updater). Claude.ai account still on the older single-file copy."
+    },
     {
       "version": "1.0.0",
       "date": "2026-10-31",

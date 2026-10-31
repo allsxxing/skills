@@ -1,0 +1,58 @@
+name: Skill Intake
+
+# Pulls skills that any connected AI app saved through the skills MCP server and commits them
+# into registry/. No secrets: the queue is read from the public MCP endpoint, and applied ids
+# go into registry/applied.json, which the server reads to prune its queue.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [skills-intake]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: registry-main
+  cancel-in-progress: false
+
+env:
+  QUEUE_URL: ${{ vars.SKILLS_QUEUE_URL || 'https://skills-allsxxing.vercel.app/api/queue' }}
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch queue
+        id: queue
+        run: |
+          curl -fsS --retry 3 "$QUEUE_URL" -o /tmp/queue.json || echo "[]" > /tmp/queue.json
+          n=$(python -c "import json;print(len(json.load(open('/tmp/queue.json'))))")
+          echo "count=$n" >> "$GITHUB_OUTPUT"
+          echo "Pending submissions: $n"
+
+      - name: Apply submissions
+        if: steps.queue.outputs.count != '0'
+        run: |
+          python tools/registry.py ingest /tmp/queue.json | tee /tmp/result.json
+          python tools/registry.py status --check
+
+      - name: Commit
+        if: steps.queue.outputs.count != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add registry dist .claude-plugin/marketplace.json
+          if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
+          msg=$(python -c "import json;r=json.load(open('/tmp/result.json'));a=r['applied'];print('skills: intake ' + (', '.join(f\"{x['skill']}@{x['platform']} v{x['version']}\" for x in a) or 'queue cleanup'))")
+          git commit -m "$msg [bot]"
+          git pull --rebase -q origin main
+          git push
