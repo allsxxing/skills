@@ -3,7 +3,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { CORE_PLATFORMS, detectPlatform, isValidName, slugify, spec } from "@/lib/platforms";
-import { clients, enqueue, pending, queueReady, type Submission } from "@/lib/queue";
+import { clients, enqueue, pending, queueHealth, type Submission } from "@/lib/queue";
 import { REPO, findSkill, loadBundle, type SkillRecord } from "@/lib/registry";
 
 type Result = { content: Array<{ type: "text"; text: string }>; isError?: boolean };
@@ -109,7 +109,7 @@ export function registerReadTools(server: McpServer): void {
         "and which AI apps have connected to this registry.",
     },
     async () => {
-      const [{ bundle, source }, queue, seen] = await Promise.all([loadBundle(), pending(), clients()]);
+      const [{ bundle, source }, queue, seen, storage] = await Promise.all([loadBundle(), pending(), clients(), queueHealth()]);
       const plats = Array.from(new Set([...bundle.platforms, ...seen.map((c) => c.platform)]));
       const skills = Object.values(bundle.skills).sort((a, b) => a.name.localeCompare(b.name));
       const portQueue = skills.flatMap((s) =>
@@ -129,7 +129,7 @@ export function registerReadTools(server: McpServer): void {
         port_queue: portQueue,
         pending_submissions: queue.map((q) => ({ id: q.id, skill: q.skill, platform: q.platform, received: q.received, note: q.note })),
         connected_apps: seen.map((c) => ({ platform: c.platform, client: c.client_name, first_seen: c.first_seen, last_seen: c.last_seen })),
-        queue_storage: queueReady() ? "ready" : "not configured",
+        queue_storage: storage,
       });
     },
   );

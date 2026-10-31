@@ -37,6 +37,17 @@ export function queueReady(): boolean {
   return Boolean(URL_ && KEY && !KEY.startsWith("__"));
 }
 
+/** "ready" when the queue tables answer, otherwise a short reason. Never throws. */
+export async function queueHealth(): Promise<string> {
+  if (!queueReady()) return "not configured";
+  try {
+    await rest("skill_queue?select=id&limit=1");
+    return "ready";
+  } catch (e) {
+    return (e as Error).message.includes("PGRST205") ? "not set up (run the Supabase setup SQL)" : "unreachable";
+  }
+}
+
 async function rest<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (!URL_ || !KEY) throw new Error("Queue storage is not configured.");
   const res = await fetch(`${URL_}/rest/v1/${path}`, {
@@ -85,7 +96,7 @@ export async function writeKeyValid(key: string): Promise<boolean> {
 export async function pending(): Promise<Submission[]> {
   if (!queueReady()) return [];
   const [rows, done] = await Promise.all([
-    rest<Submission[]>("skill_queue?select=*&order=received.asc&limit=500"),
+    rest<Submission[]>("skill_queue?select=*&order=received.asc&limit=500").catch(() => [] as Submission[]),
     appliedIds(),
   ]);
   // Applied rows are filtered here and expire in the database after 14 days.
