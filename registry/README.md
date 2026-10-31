@@ -9,8 +9,8 @@ Live dashboard: [STATUS.md](STATUS.md)
 The registry is served as an MCP server from `mcp/` (Next.js, deployed on Vercel with Root Directory set to `mcp`):
 
 ```
-https://skills-allsxxing.vercel.app/api/mcp            read-only
-https://skills-allsxxing.vercel.app/api/mcp?key=...    read + save
+https://skills.allsxxing.com/api/mcp            read-only
+https://skills.allsxxing.com/api/mcp?key=...    read + save
 ```
 
 | Tool | What it does |

@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  QUEUE_URL: ${{ vars.SKILLS_QUEUE_URL || 'https://skills-allsxxing.vercel.app/api/queue' }}
+  QUEUE_URL: ${{ vars.SKILLS_QUEUE_URL || 'https://skills.allsxxing.com/api/queue' }}
 
 jobs:
   intake:
