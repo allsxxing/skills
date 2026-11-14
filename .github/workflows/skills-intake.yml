@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: "*/10 * * * *"
   workflow_dispatch:
+  # GitHub throttles the schedule to every few hours on this repo, so any push to main
+  # also drains the queue. Bot commits made with GITHUB_TOKEN do not re-trigger this.
+  push:
+    branches: [main]
   repository_dispatch:
     types: [skills-intake]
 
