@@ -35,41 +35,6 @@
     }
   },
   {
-    "name": "connector-test",
-    "summary": "Temporary round-trip test of the skills MCP write path. Safe to delete.",
-    "canonical": {
-      "platform": "claude",
-      "version": "1.0.0",
-      "updated": "2026-11-14"
-    },
-    "platforms": {
-      "claude": {
-        "state": "current",
-        "version": "1.0.0",
-        "updated": "2026-11-14",
-        "synced_from": null
-      },
-      "gemini": {
-        "state": "missing",
-        "version": null,
-        "updated": null,
-        "synced_from": null
-      },
-      "grok": {
-        "state": "missing",
-        "version": null,
-        "updated": null,
-        "synced_from": null
-      },
-      "perplexity": {
-        "state": "missing",
-        "version": null,
-        "updated": null,
-        "synced_from": null
-      }
-    }
-  },
-  {
     "name": "dfs-parlaypro",
     "summary": "Use for live DFS player props and parlay builds (PrizePicks, Underdog, Betr) via /parlay, /props, or slate requests; runs verified de-vig +EV math, correlation checks, and tiered slip construction.",
     "canonical": {
@@ -249,14 +214,14 @@
     "summary": "Keeps every skill GJ builds in sync across Claude, Gemini, Grok, and Perplexity through the allsxxing/skills GitHub registry. Use when a skill is created or updated in any app, when GJ pastes a skill from Gemini, Grok, or Perplexity, when he asks which platform copies are outdated, or wants a skill ported to another platform. Triggers on /skillsync, /skills, sync skill, save skill to repo, push skill, port skill to Gemini/Grok/Perplexity, skill status, what's outdated, or the end of any skill-creator session.",
     "canonical": {
       "platform": "claude",
-      "version": "2.0.0",
-      "updated": "2026-10-31"
+      "version": "2.0.1",
+      "updated": "2026-11-14"
     },
     "platforms": {
       "claude": {
         "state": "current",
-        "version": "2.0.0",
-        "updated": "2026-10-31",
+        "version": "2.0.1",
+        "updated": "2026-11-14",
         "synced_from": null
       },
       "gemini": {

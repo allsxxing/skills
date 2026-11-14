@@ -9,8 +9,8 @@ Live dashboard: [STATUS.md](STATUS.md)
 The registry is served as an MCP server from `mcp/` (Next.js, deployed on Vercel with Root Directory set to `mcp`):
 
 ```
-https://skills.allsxxing.com/api/mcp            read-only
-https://skills.allsxxing.com/api/mcp?key=...    read + save
+https://skills-sooty-nine.vercel.app/api/mcp            read-only
+https://skills-sooty-nine.vercel.app/api/mcp?key=...    read + save
 ```
 
 | Tool | What it does |
@@ -28,7 +28,7 @@ Any app that connects is detected from its client name and gets its own column a
 ## How changes flow
 
 1. An app saves a skill through `skills_submit` or `skills_sync_platform`. It is queued in Vercel Blob.
-2. The `Skill Intake` Action runs every 10 minutes, commits queued skills into `registry/<skill>/platforms/<app>/`, versions them, and records their ids in `applied.json` (which prunes the queue).
+2. The `Skill Intake` Action runs on a schedule (GitHub fires it every few hours) and on every push to main, commits queued skills into `registry/<skill>/platforms/<app>/`, versions them, and records their ids in `applied.json` (which prunes the queue).
 3. The `Skill Registry` Action and the intake run rebuild `STATUS.md`, `index.json`, `bundle.json`, and the Claude Code plugin in `dist/claude/`.
 4. Vercel redeploys on every push; reads also pull `bundle.json` live from `main`, so every app sees changes within a minute.
 

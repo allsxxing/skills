@@ -48,7 +48,6 @@
       "strict": false,
       "skills": [
         "./dist/claude/codespaces-optimizer",
-        "./dist/claude/connector-test",
         "./dist/claude/dfs-parlaypro",
         "./dist/claude/league-tone",
         "./dist/claude/mom-casino-bus-protocol",

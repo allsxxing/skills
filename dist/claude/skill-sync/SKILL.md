@@ -10,7 +10,7 @@ The registry at github.com/allsxxing/skills is the single source of truth for ev
 ## Commands
 
 ### `/skillsync save <skill>` (also automatic at the end of a skill-creator session)
-Call `skills_submit` with the skill name, `platform: "claude"`, every file of the skill as `files`, and a one-line `note`. Set `promote: true` only when this copy should become the version every other app is ported from. Report the submission id and that it lands in the repo within about 10 minutes.
+Call `skills_submit` with the skill name, `platform: "claude"`, every file of the skill as `files`, and a one-line `note`. Set `promote: true` only when this copy should become the version every other app is ported from. Report the submission id and that it lands in the repo on the next intake run, usually within a few hours.
 
 ### `/skillsync` or `/skillsync all`
 Call `skills_sync_platform` with every custom skill available in this session (their full SKILL.md and bundled files). Identical copies are skipped server-side.

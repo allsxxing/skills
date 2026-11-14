@@ -220,7 +220,7 @@ export function registerWriteTools(server: McpServer): void {
       title: "Save a skill to the registry",
       description:
         "Save a new or updated skill from this app into GJ's registry. It is committed to github.com/allsxxing/skills automatically " +
-        "within about 10 minutes, versioned, and drift-checked against every other platform. Use whenever a skill, Gem, Project, " +
+        "on the next intake run (usually within a few hours), versioned, and drift-checked against every other platform. Use whenever a skill, Gem, Project, " +
         "custom GPT, Space, or reusable instruction set is created or edited.",
       inputSchema: {
         name: z.string().describe("Skill name in kebab-case. Reuse the existing name when updating."),
@@ -254,7 +254,7 @@ export function registerWriteTools(server: McpServer): void {
         }, writeKey(extra));
         return text(
           `Queued ${name} for ${spec(platform).label} (submission ${sub.id}, ${Object.keys(files).length} files). ` +
-            `It lands in github.com/${REPO}/tree/main/registry/${name} on the next intake run (about every 10 minutes).`,
+            `It lands in github.com/${REPO}/tree/main/registry/${name} on the next intake run (usually within a few hours).`,
         );
       } catch (e) {
         return fail(`Could not queue: ${(e as Error).message}`);
@@ -316,7 +316,7 @@ export function registerWriteTools(server: McpServer): void {
         }
       }
       return text(
-        `${spec(platform).label} sync: ${results.length} items\n${results.join("\n")}\n\nThey land in github.com/${REPO} on the next intake run (about every 10 minutes).`,
+        `${spec(platform).label} sync: ${results.length} items\n${results.join("\n")}\n\nThey land in github.com/${REPO} on the next intake run (usually within a few hours).`,
       );
     },
   );
