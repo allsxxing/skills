@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { siGiphy, siGithub, siInstagram, siX } from "simple-icons";
 import { APPS, MCP_URL, PROMPTS, REPO_URL, SOCIALS, TOOLS } from "@/lib/site";
 
@@ -71,14 +71,6 @@ function DeskIcon({ id }: { id: WinId }) {
   );
 }
 
-function Bolt({ size = 18 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 12 16" width={(size * 12) / 16} height={size} aria-hidden="true" shapeRendering="crispEdges">
-      <path d="M7 0H4L1 9h4l-2 7 8-10H7z" fill="var(--bolt)" stroke="currentColor" strokeWidth="1" />
-    </svg>
-  );
-}
-
 function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) {
   const [done, setDone] = useState(false);
   return (
@@ -96,31 +88,6 @@ function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) 
     >
       {done ? "Copied" : label}
     </button>
-  );
-}
-
-function Eyes() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const move = (e: PointerEvent) => {
-      ref.current?.querySelectorAll<HTMLElement>(".eye").forEach((eye) => {
-        const r = eye.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width / 2);
-        const dy = e.clientY - (r.top + r.height / 2);
-        const d = Math.hypot(dx, dy) || 1;
-        const reach = Math.min(1, d / 220);
-        const pupil = eye.firstElementChild as HTMLElement;
-        pupil.style.transform = `translate(${(dx / d) * reach * r.width * 0.24}px, ${(dy / d) * reach * r.height * 0.2}px)`;
-      });
-    };
-    window.addEventListener("pointermove", move);
-    return () => window.removeEventListener("pointermove", move);
-  }, []);
-  return (
-    <div className="eyes" ref={ref} aria-hidden="true">
-      <span className="eye"><i /></span>
-      <span className="eye"><i /></span>
-    </div>
   );
 }
 
@@ -280,6 +247,7 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
     ),
     socials: (
       <>
+        <img className="banner" src="/brand/banner.gif" alt="ALL SEEING EYES banner with the XX mark" width={1040} height={160} />
         <p>producer of visuals + awesomeness</p>
         <ul className="socials">
           {SOCIALS.map((s) => (
@@ -304,7 +272,7 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
     <div className="desk">
       <header className="menubar">
         <a className="mark" href="#" onClick={() => setOpen([])}>
-          <Bolt /> [@allsxxing]
+          <img src="/brand/xx-circle.gif" alt="" width={22} height={22} /> [@allsxxing]
         </a>
         <nav aria-label="Windows">
           {WINDOWS.map((w) => (
@@ -332,7 +300,7 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
         </aside>
 
         <section className="hero">
-          <Eyes />
+          <img className="logo" src="/brand/xx-circle.gif" alt="ALL SEEING EYES XX logo" width={180} height={180} />
           <h1>
             <span className="handle">[@allsxxing]</span>
             <span className="product">Skills MCP</span>
@@ -351,6 +319,13 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
             </li>
           ))}
         </ul>
+
+        <img className="sticker" src="/brand/htown.gif" alt="HTOWN spray sticker" width={400} height={400} loading="lazy" />
+        <div className="tv" aria-hidden="true">
+          {["new", "banger", "gifxgod", "blessed", "godisgood"].map((t) => (
+            <img key={t} src={`/brand/tv-${t}.gif`} alt="" height={30} loading="lazy" />
+          ))}
+        </div>
 
         {open.map((id, z) => {
           const w = WINDOWS.find((x) => x.id === id)!;

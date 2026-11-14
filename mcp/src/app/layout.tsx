@@ -4,6 +4,7 @@ export const metadata = {
   title: "allsxxing Skills MCP",
   description:
     "One registry for every skill @allsxxing runs across Claude, Grok, Gemini, Perplexity and ChatGPT. Connect an app in a minute.",
+  icons: { icon: "/brand/xx-circle.gif" },
 };
 
 export const viewport = { width: "device-width", initialScale: 1 };
