@@ -42,11 +42,14 @@ code { font-family: var(--mono); font-size: 0.92em; }
 .menubar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 20px; height: 36px; padding: 0 16px;
   background: var(--paper); border-bottom: var(--edge); font-family: var(--pixel); font-size: 16px; }
 .menubar .mark { display: flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; }
-.menubar nav { display: flex; gap: 4px; flex: 1; }
-.menubar nav button { padding: 2px 8px; }
-.menubar nav button:hover { background: var(--ink); color: var(--paper); }
+.menubar nav { display: flex; gap: 6px; flex: 1; }
+.tvbox, .menubar nav button, .menubar .mark, .menubar .status, .menubar > .clock {
+  background: var(--ink); color: var(--paper); padding: 1px 8px; line-height: 1.35; white-space: nowrap; text-decoration: none; border-radius: 0; }
+.menubar nav button::before, .menubar nav button::after { content: "**"; }
+.menubar nav button:hover, .menubar .mark:hover, a.tvbox:hover { background: var(--xx-yellow); color: var(--ink); }
+.menubar .mark { font-weight: 400; }
 .status { display: flex; align-items: center; gap: 8px; }
-.dot { width: 9px; height: 9px; border: 2px solid var(--ink); display: inline-block; }
+.dot { width: 9px; height: 9px; border: 2px solid var(--paper); display: inline-block; }
 .dot.on { background: var(--xx-green); }
 .clock { font-variant-numeric: tabular-nums; }
 
@@ -155,14 +158,28 @@ td:first-child { font-family: var(--mono); }
 .socials span { display: grid; font-family: var(--mono); font-size: 12px; line-height: 1.3; }
 .socials b { font-family: var(--pixel); font-weight: 500; font-size: 16px; }
 
-.foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 16px; border-top: var(--edge); font-family: var(--sans); font-size: 12px; }
-.foot span:last-child { display: flex; gap: 14px; }
-.foot a { display: grid; padding: 4px; }
-.foot a:hover { background: var(--bolt); }
+.foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px 16px; padding: 10px 16px; border-top: var(--edge);
+  font-family: var(--sans); font-size: 13px; background: var(--xx-yellow); animation: tv-swap 15s step-end infinite; }
+@keyframes tv-swap {
+  0% { background: var(--xx-yellow); }
+  20% { background: var(--xx-cyan); }
+  40% { background: var(--xx-green); }
+  60% { background: var(--xx-pink); }
+  80% { background: var(--xx-red); }
+}
+.foot ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.foot .tvbox { display: block; text-transform: uppercase; }
+.app { display: grid; place-items: center; width: 30px; height: 30px; color: #fff; border: var(--edge); }
+.app.instagram { background: linear-gradient(45deg, #feda75, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5); }
+.app.x { background: #000; }
+.app.giphy { background: #000; color: #00ff99; }
+.app.github { background: #181717; }
+.app:hover { box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px, -1px); }
 
 @media (max-width: 820px) {
   .menubar { gap: 10px; padding: 0 10px; overflow-x: auto; }
   .menubar .status, .menubar > .clock { display: none; }
+  .menubar nav button::before, .menubar nav button::after { content: "*"; }
   .wallpaper { display: flex; flex-direction: column; gap: 28px; padding: 28px 16px 36px; min-height: 0; }
   .hero, .widget, .icons, .tv, .sticker { position: static; transform: none; }
   .tv { order: 4; flex-wrap: wrap; justify-content: center; }
@@ -179,5 +196,6 @@ td:first-child { font-family: var(--mono); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .foot { animation: none; }
   .eye i { transition: none; }
 }

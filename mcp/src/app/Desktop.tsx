@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { siGiphy, siGithub, siInstagram, siX } from "simple-icons";
-import { APPS, MCP_URL, PROMPTS, REPO_URL, SOCIALS, TOOLS } from "@/lib/site";
+import { APPS, CONTACT, MCP_URL, PROMPTS, REPO_URL, SOCIALS, TOOLS } from "@/lib/site";
 
 export interface SkillRow {
   name: string;
@@ -350,16 +350,27 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
       </main>
 
       <footer className="foot">
-        <span>ALL SEEING EYES (@allsxxingeyes). Houston, TX.</span>
-        <span>
-          {SOCIALS.map((s) => (
-            <a key={s.id} href={s.href} target="_blank" rel="noreferrer me" aria-label={`${s.label} ${s.handle}`}>
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                <path d={SOCIAL_ICONS[s.id].path} fill="currentColor" />
-              </svg>
-            </a>
+        <span className="tvbox">ALL SEEING EYES (@allsxxingeyes). Houston, TX.</span>
+        <ul className="contact">
+          {CONTACT.map((c) => (
+            <li key={c.label}>
+              <a className="tvbox" href={c.href} {...(c.href.startsWith("http") ? { target: "_blank", rel: "noreferrer me" } : {})}>
+                [{c.label}] {c.text}
+              </a>
+            </li>
           ))}
-        </span>
+        </ul>
+        <ul className="apps">
+          {SOCIALS.map((s) => (
+            <li key={s.id}>
+              <a className={`app ${s.id}`} href={s.href} target="_blank" rel="noreferrer me" aria-label={`${s.label} ${s.handle}`}>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path d={SOCIAL_ICONS[s.id].path} fill="currentColor" />
+                </svg>
+              </a>
+            </li>
+          ))}
+        </ul>
       </footer>
     </div>
   );

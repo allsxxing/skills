@@ -10,6 +10,11 @@ export const SOCIALS = [
   { id: "github", label: "GitHub", handle: "allsxxing", href: "https://github.com/allsxxing" },
 ] as const;
 
+export const CONTACT = [
+  { label: "Email", text: "connect@allsxxing.com", href: "mailto:connect@allsxxing.com" },
+  { label: "Website", text: "allsxxing.com", href: "https://allsxxing.com" },
+] as const;
+
 export const TOOLS = [
   { name: "skills_list", access: "read", does: "Lists every skill with its newest version and how each app's copy compares." },
   { name: "skills_get", access: "read", does: "Returns the full files of one skill for the app you name." },
