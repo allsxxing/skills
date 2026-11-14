@@ -39,14 +39,14 @@
     "summary": "Use for live DFS player props and parlay builds (PrizePicks, Underdog, Betr) via /parlay, /props, or slate requests; runs verified de-vig +EV math, correlation checks, and tiered slip construction.",
     "canonical": {
       "platform": "claude",
-      "version": "3.0.0",
-      "updated": "2026-10-31"
+      "version": "3.1.0",
+      "updated": "2026-11-14"
     },
     "platforms": {
       "claude": {
         "state": "current",
-        "version": "3.0.0",
-        "updated": "2026-10-31",
+        "version": "3.1.0",
+        "updated": "2026-11-14",
         "synced_from": null
       },
       "gemini": {

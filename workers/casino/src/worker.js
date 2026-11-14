@@ -4,7 +4,7 @@
  *
  * Handles:
  *   fetch  → serves the current Casino Bus Protocol HTML card
- *   scheduled → fires on Thu/Fri/Sat cron to log + future KV refresh hooks
+ *   scheduled → fires on THU/FRI/SAT cron to log + future KV refresh hooks
  */
 
 // ─── CURRENT PROTOCOL HTML ──────────────────────────────────────

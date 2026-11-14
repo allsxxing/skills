@@ -7,7 +7,7 @@ Skills tracked: 8  |  Platforms: Claude, Gemini, Grok, Perplexity  |  Copies nee
 | Skill | Canonical | Claude | Gemini | Grok | Perplexity |
 |---|---|---|---|---|---|
 | [codespaces-optimizer](codespaces-optimizer/) | v1.0.0 (Claude, 2026-10-31) | 🟢 current v1.0.0 | ⚪ missing | ⚪ missing | ⚪ missing |
-| [dfs-parlaypro](dfs-parlaypro/) | v3.0.0 (Claude, 2026-10-31) | 🟢 current v3.0.0 | ⚪ missing | ⚪ missing | ⚪ missing |
+| [dfs-parlaypro](dfs-parlaypro/) | v3.1.0 (Claude, 2026-11-14) | 🟢 current v3.1.0 | ⚪ missing | ⚪ missing | ⚪ missing |
 | [league-tone](league-tone/) | v2.0.0 (Claude, 2026-10-31) | 🟢 current v2.0.0 | ⚪ missing | ⚪ missing | ⚪ missing |
 | [mom-casino-bus-protocol](mom-casino-bus-protocol/) | v3.0.0 (Claude, 2026-10-31) | 🟢 current v3.0.0 | ⚪ missing | ⚪ missing | ⚪ missing |
 | [promo-code-hunter](promo-code-hunter/) | v1.0.0 (Claude, 2026-10-31) | 🟢 current v1.0.0 | ⚪ missing | ⚪ missing | ⚪ missing |
