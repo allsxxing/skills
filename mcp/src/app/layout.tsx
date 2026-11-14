@@ -1,14 +1,25 @@
+import "./globals.css";
+
 export const metadata = {
-  title: "ALL SEEING EYES Skills MCP",
-  description: "Every skill GJ (@allsxxing) builds, on every AI app, from one registry.",
+  title: "allsxxing Skills MCP",
+  description:
+    "One registry for every skill @allsxxing runs across Claude, Grok, Gemini, Perplexity and ChatGPT. Connect an app in a minute.",
 };
+
+export const viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, background: "#0b0b0f", color: "#e8e8ee", fontFamily: "ui-monospace, Menlo, monospace" }}>
-        {children}
-      </body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&family=Geist+Mono:wght@400;500&family=Pixelify+Sans:wght@400;500;700&display=swap"
+        />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
