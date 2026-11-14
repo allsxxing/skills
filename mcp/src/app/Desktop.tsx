@@ -55,7 +55,8 @@ function DeskIcon({ id }: { id: WinId }) {
         <>
           <path d="M10 4h18l8 8v28H10z" {...common} />
           <path d="M28 4v8h8" {...common} />
-          <path d="M15 20h14M15 26h14M15 32h8" {...common} />
+          <rect x="15" y="18" width="14" height="5" fill="var(--bolt)" stroke="currentColor" strokeWidth="2" />
+          <path d="M15 28h14M15 33h8" {...common} />
         </>
       )}
       {id === "socials" && (
@@ -336,7 +337,7 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
             <span className="handle">[@allsxxing]</span>
             <span className="product">Skills MCP</span>
           </h1>
-          <div className="stripe" aria-hidden="true"><i /><i /><i /></div>
+          <div className="stripe" aria-hidden="true"><i /><i /><i /><i /><i /></div>
           <p>One registry for every skill, on every AI app. Pick an icon to begin.</p>
         </section>
 
