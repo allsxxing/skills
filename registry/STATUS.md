@@ -12,7 +12,7 @@ Skills tracked: 8  |  Platforms: Claude, Gemini, Grok, Perplexity  |  Copies nee
 | [mom-casino-bus-protocol](mom-casino-bus-protocol/) | v3.0.0 (Claude, 2026-10-31) | 🟢 current v3.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 |
 | [promo-code-hunter](promo-code-hunter/) | v1.0.0 (Claude, 2026-10-31) | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 |
 | [prompt-engineer](prompt-engineer/) | v1.0.0 (Claude, 2026-10-31) | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 |
-| [skill-sync](skill-sync/) | v2.0.1 (Claude, 2026-11-14) | 🟢 current v2.0.1 | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 |
+| [skill-sync](skill-sync/) | v2.0.1 (Claude, 2026-11-14) | 🟢 current v2.0.1 | 🟢 current v1.0.1 | 🟢 current v1.0.0 | 🟢 current v1.0.0 |
 | [xai-assessment-protocol](xai-assessment-protocol/) | v3.0.0 (Claude, 2026-10-31) | 🟢 current v3.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 | 🟢 current v1.0.0 |
 
 ## Port queue

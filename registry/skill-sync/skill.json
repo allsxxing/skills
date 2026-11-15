@@ -14,9 +14,9 @@
       "entry": "SKILL.md"
     },
     "gemini": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "updated": "2026-11-15",
-      "hash": "a8089d849734",
+      "hash": "fc7f95ce8e53",
       "entry": "GEM.md",
       "synced_from": "2.0.1"
     },
@@ -36,6 +36,12 @@
     }
   },
   "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-11-15",
+      "platform": "gemini",
+      "note": "Ported from canonical claude version to gemini"
+    },
     {
       "version": "1.0.0",
       "date": "2026-11-15",
