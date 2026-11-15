@@ -12,9 +12,48 @@
       "updated": "2026-10-31",
       "hash": "7eb47f4e9554",
       "entry": "SKILL.md"
+    },
+    "gemini": {
+      "version": "1.0.0",
+      "updated": "2026-11-15",
+      "hash": "af732aa27a71",
+      "entry": "GEM.md",
+      "synced_from": "2.0.0"
+    },
+    "grok": {
+      "version": "1.0.0",
+      "updated": "2026-11-15",
+      "hash": "440cd96ac9ee",
+      "entry": "PROJECT.md",
+      "synced_from": "2.0.0"
+    },
+    "perplexity": {
+      "version": "1.0.0",
+      "updated": "2026-11-15",
+      "hash": "89f47b4429ac",
+      "entry": "SPACE.md",
+      "synced_from": "2.0.0"
     }
   },
   "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-15",
+      "platform": "perplexity",
+      "note": "Ported from canonical claude v2.0.0"
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-11-15",
+      "platform": "grok",
+      "note": "Ported from canonical claude v2.0.0"
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-11-15",
+      "platform": "gemini",
+      "note": "Ported from canonical claude v2.0.0"
+    },
     {
       "version": "2.0.0",
       "date": "2026-10-31",
