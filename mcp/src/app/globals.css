@@ -36,7 +36,7 @@ a { color: inherit; }
 code { font-family: var(--mono); font-size: 0.92em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
-.desk { min-height: 100vh; display: flex; flex-direction: column; }
+.desk { min-height: 100vh; display: flex; flex-direction: column; overflow-x: clip; }
 
 /* menu bar */
 .menubar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 20px; height: 36px; padding: 0 16px;
@@ -188,11 +188,14 @@ td:first-child { font-family: var(--mono); }
   .hero { width: 100%; order: 1; }
   .icons { order: 2; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); justify-items: center; }
   .widget { order: 3; width: 100%; }
-  .window { position: fixed; left: 8px !important; right: 8px; top: 44px !important; bottom: 8px; width: auto !important; max-width: none; display: flex; flex-direction: column; }
+  /* phone windows hug their content and only scroll when it is taller than the screen */
+  .window { position: fixed; left: 8px !important; right: 14px; top: 44px !important; width: auto !important; max-width: none;
+    max-height: calc(100vh - 56px); max-height: calc(100dvh - 56px); display: flex; flex-direction: column; }
   .titlebar { cursor: default; flex: none; }
-  .content { max-height: none; flex: 1; }
+  .content { max-height: none; flex: 0 1 auto; min-height: 0; overscroll-behavior: contain; }
   .socials { grid-template-columns: 1fr; }
   .foot { flex-direction: column; align-items: flex-start; }
+  .foot .tvbox { white-space: normal; overflow-wrap: anywhere; }
 }
 
 @media (prefers-reduced-motion: reduce) {
