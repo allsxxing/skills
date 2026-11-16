@@ -191,6 +191,7 @@ td:first-child { font-family: var(--mono); }
   /* phone windows hug their content and only scroll when it is taller than the screen */
   .window { position: fixed; left: 8px !important; right: 14px; top: 44px !important; width: auto !important; max-width: none;
     max-height: calc(100vh - 56px); max-height: calc(100dvh - 56px); display: flex; flex-direction: column; }
+  .window:not(.top) { display: none; }
   .titlebar { cursor: default; flex: none; }
   .content { max-height: none; flex: 0 1 auto; min-height: 0; overscroll-behavior: contain; }
   .socials { grid-template-columns: 1fr; }
