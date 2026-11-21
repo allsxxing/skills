@@ -1,0 +1,25 @@
+{
+  "name": "ase-tdd",
+  "summary": "Use when implementing any feature or bug fix in testable code, before writing the implementation. Triggers on /tdd.",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-11-21"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-11-21",
+      "hash": "2f363e7a3b95",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-21",
+      "platform": "claude",
+      "note": "ASE remix of obra/superpowers test-driven-development. Triggers on /tdd."
+    }
+  ]
+}

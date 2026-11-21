@@ -1,0 +1,25 @@
+{
+  "name": "ase-using-superpowers",
+  "summary": "Use at the start of any conversation or task, before responding or asking clarifying questions, to check whether an ASE skill applies.",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-11-21"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-11-21",
+      "hash": "5b8f706b4471",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-21",
+      "platform": "claude",
+      "note": "ASE remix of obra/superpowers using-superpowers. Router rule, registry-aware, any platform."
+    }
+  ]
+}

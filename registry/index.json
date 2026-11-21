@@ -1,5 +1,390 @@
 [
   {
+    "name": "ase-brainstorming",
+    "summary": "Use before any creative or build work, including new features, tools, sites, prompts, content systems, or behavior changes. Triggers on /brainstorm.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-debugging",
+    "summary": "Use when hitting any bug, failing test, build error, performance problem, or unexpected behavior, before proposing a fix. Triggers on /debug.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-diagnose-session",
+    "summary": "Use when a Claude Code session went wrong and GJ wants to know why: repeated work, ignored plans, a skill that did not fire, slow or expensive runs, or a bug report is needed. Triggers on /diagnose.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-executing-plans",
+    "summary": "Use when a written implementation plan exists and is ready to be carried out task by task. Triggers on /execute.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-parallel-agents",
+    "summary": "Use when facing 2 or more independent tasks or failures that share no state and do not depend on each other. Triggers on /parallel.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-superpowers-guide",
+    "summary": "Use when unsure which ASE superpowers skill to run, or when GJ asks how to use them. Triggers on /sp, /superpowers, which skill, how do I use these.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-tdd",
+    "summary": "Use when implementing any feature or bug fix in testable code, before writing the implementation. Triggers on /tdd.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-using-superpowers",
+    "summary": "Use at the start of any conversation or task, before responding or asking clarifying questions, to check whether an ASE skill applies.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-verify",
+    "summary": "Use when about to claim work is complete, fixed, passing, or ready, and before any commit, PR, handoff, or move to the next task. Triggers on /verify.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-writing-plans",
+    "summary": "Use when an approved design or spec exists for a multi-step task and no implementation plan is written yet. Triggers on /plan.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
+    "name": "ase-writing-skills",
+    "summary": "Use when creating a new skill, editing an existing skill, or checking that a skill works before it ships. Triggers on /newskill.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      }
+    }
+  },
+  {
     "name": "codespaces-optimizer",
     "summary": "Optimizes responses for GitHub Codespaces workflows with direct commands, cloud-first approach, and zero local installs",
     "canonical": {
@@ -101,6 +486,41 @@
         "version": "1.0.0",
         "updated": "2026-11-15",
         "synced_from": "2.0.0"
+      }
+    }
+  },
+  {
+    "name": "mac-mini-shutdown",
+    "summary": "Safely quit all open apps and fully shut down GJ's Mac mini. Use when the user says \\\"shut down my Mac mini\\\", \\\"shut down the Mac\\\", \\\"power off the mini\\\", \\\"/shutdown\\\", or similar, including requests sent from the phone via Dispatch.",
+    "canonical": {
+      "platform": "claude",
+      "version": "1.0.0",
+      "updated": "2026-11-21"
+    },
+    "platforms": {
+      "claude": {
+        "state": "current",
+        "version": "1.0.0",
+        "updated": "2026-11-21",
+        "synced_from": null
+      },
+      "gemini": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "grok": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
+      },
+      "perplexity": {
+        "state": "missing",
+        "version": null,
+        "updated": null,
+        "synced_from": null
       }
     }
   },

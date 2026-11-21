@@ -1,0 +1,25 @@
+{
+  "name": "mac-mini-shutdown",
+  "summary": "Safely quit all open apps and fully shut down GJ's Mac mini. Use when the user says \\\"shut down my Mac mini\\\", \\\"shut down the Mac\\\", \\\"power off the mini\\\", \\\"/shutdown\\\", or similar, including requests sent from the phone via Dispatch.",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-11-21"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-11-21",
+      "hash": "6208b5847f81",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-21",
+      "platform": "claude",
+      "note": "New: found in Claude account skills, not yet in registry."
+    }
+  ]
+}

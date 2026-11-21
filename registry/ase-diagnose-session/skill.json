@@ -1,0 +1,25 @@
+{
+  "name": "ase-diagnose-session",
+  "summary": "Use when a Claude Code session went wrong and GJ wants to know why: repeated work, ignored plans, a skill that did not fire, slow or expensive runs, or a bug report is needed. Triggers on /diagnose.",
+  "canonical": {
+    "platform": "claude",
+    "version": "1.0.0",
+    "updated": "2026-11-21"
+  },
+  "platforms": {
+    "claude": {
+      "version": "1.0.0",
+      "updated": "2026-11-21",
+      "hash": "f53f5ed492f7",
+      "entry": "SKILL.md"
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-21",
+      "platform": "claude",
+      "note": "ASE remix of obra/superpowers diagnosing-superpowers (condensed, Claude Code transcripts only). Triggers on /diagnose."
+    }
+  ]
+}
