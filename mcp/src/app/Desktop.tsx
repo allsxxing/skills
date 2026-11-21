@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { siGiphy, siGithub, siInstagram, siX } from "simple-icons";
-import { APPS, CONTACT, MCP_URL, PROMPTS, REPO_URL, SOCIALS, TOOLS } from "@/lib/site";
+import { APPS, CONTACT, ENDPOINTS, HEALTH_URL, MCP_URL, PROMPTS_MENU, PROMPTS, REPO_URL, SOCIALS, TOOLS } from "@/lib/site";
 
 export interface SkillRow {
   name: string;
@@ -173,6 +173,30 @@ export default function Desktop({ skills, platforms, live }: { skills: SkillRow[
         <p className="note">
           The address above can read the registry. Saving skills back needs a private write key added to the end as{" "}
           <code>?key=…</code>. Keep that version of the address to yourself.
+        </p>
+
+        <h3>Once connected, the app shows these commands</h3>
+        <ul className="tools">
+          {PROMPTS_MENU.map((p) => (
+            <li key={p.name}>
+              <code>{p.name}</code>
+              <p>{p.does}</p>
+            </li>
+          ))}
+        </ul>
+
+        <h3>If an app will not connect</h3>
+        <ul className="tools">
+          {ENDPOINTS.map((e) => (
+            <li key={e.id}>
+              <code>{e.url}</code> <span className="tag">{e.label}</span>
+              <p>{e.note}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="note">
+          Start at <a href={HEALTH_URL} target="_blank" rel="noreferrer">the health check</a>. If it answers, the server is fine and the
+          problem is the app&apos;s connector form.
         </p>
       </>
     ),

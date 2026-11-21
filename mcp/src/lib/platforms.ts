@@ -78,20 +78,47 @@ export function slugify(raw: string): string {
     .slice(0, 64);
 }
 
-/** Map an MCP clientInfo.name or User-Agent to a registry platform id. */
-export function detectPlatform(raw?: string | null): string | undefined {
+/** Apps we recognize. Anything else is logged as a visitor, never turned into a registry column. */
+const KNOWN: Array<[RegExp, string]> = [
+  [/claude|anthropic/, "claude"],
+  [/openai|chatgpt|gpt-/, "chatgpt"],
+  [/grok|xai|x\.ai/, "grok"],
+  [/gemini|google|bard/, "gemini"],
+  [/perplexity/, "perplexity"],
+  [/cursor/, "cursor"],
+  [/codex/, "codex"],
+  [/copilot/, "copilot"],
+  [/windsurf|codeium/, "windsurf"],
+  [/cline/, "cline"],
+  [/zed/, "zed"],
+];
+
+export interface ClientId {
+  /** Registry platform id, only when this client is a recognized AI app. */
+  platform?: string;
+  /** Stable slug for the raw client string, used for the connection log. */
+  slug: string;
+  known: boolean;
+}
+
+/**
+ * Classify a client. A recognized AI app gets a platform id. Everything else (scripts, probes,
+ * internal tooling) is logged under its slug but gets no registry column: a column is created only
+ * when that client actually submits a skill and names its platform.
+ */
+export function classifyClient(raw?: string | null): ClientId | undefined {
   if (!raw) return undefined;
   const s = raw.toLowerCase();
-  if (s.includes("claude") || s.includes("anthropic")) return "claude";
-  if (s.includes("openai") || s.includes("chatgpt")) return "chatgpt";
-  if (s.includes("grok") || s.includes("xai")) return "grok";
-  if (s.includes("gemini") || s.includes("google")) return "gemini";
-  if (s.includes("perplexity")) return "perplexity";
-  if (s.includes("cursor")) return "cursor";
-  if (s.includes("codex")) return "codex";
-  if (s.includes("copilot")) return "copilot";
+  const hit = KNOWN.find(([re]) => re.test(s));
   const slug = slugify(raw.split("/")[0]);
-  return slug && isValidName(slug) ? slug : undefined;
+  if (hit) return { platform: hit[1], slug: slug || hit[1], known: true };
+  if (!slug || !isValidName(slug)) return undefined;
+  return { slug, known: false };
+}
+
+/** Registry platform id for a client, or undefined when the client is not a recognized AI app. */
+export function detectPlatform(raw?: string | null): string | undefined {
+  return classifyClient(raw)?.platform;
 }
 
 export function spec(id: string): PlatformSpec {

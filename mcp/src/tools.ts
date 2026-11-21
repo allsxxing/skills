@@ -2,8 +2,17 @@
 // Read tools are public (the repo is public). Write tools register only on the key-gated handler.
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { CORE_PLATFORMS, detectPlatform, isValidName, slugify, spec } from "@/lib/platforms";
-import { clients, enqueue, pending, queueHealth, type Submission } from "@/lib/queue";
+import { CORE_PLATFORMS, classifyClient, detectPlatform, isValidName, slugify, spec } from "@/lib/platforms";
+import {
+  clients,
+  dispatchConfigured,
+  dispatchIntake,
+  enqueue,
+  landingNote,
+  pending,
+  queueHealth,
+  type Submission,
+} from "@/lib/queue";
 import { REPO, findSkill, loadBundle, type SkillRecord } from "@/lib/registry";
 
 type Result = { content: Array<{ type: "text"; text: string }>; isError?: boolean };
@@ -22,6 +31,17 @@ function callerPlatform(extra: any): string | undefined {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function callerClient(extra: any) {
+  const h = extra?.requestInfo?.headers ?? {};
+  const pick = (k: string) => {
+    const v = h[k] ?? h[k.toLowerCase()];
+    return Array.isArray(v) ? v[0] : v;
+  };
+  const raw = pick("x-mcp-client") ?? pick("user-agent");
+  return { raw: raw as string | undefined, id: classifyClient(raw) };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function writeKey(extra: any): string {
   const h = extra?.requestInfo?.headers ?? {};
   const v = h["x-skills-write-key"];
@@ -37,8 +57,10 @@ function renderFiles(files: Record<string, string>): string {
 function statusLine(s: SkillRecord, platforms: string[]): string {
   const cells = platforms.map((p) => {
     const st = s.platforms[p];
-    const v = st?.version && st.state !== "missing" ? ` v${st.version}` : "";
-    return `${p}: ${st?.state ?? "missing"}${v}`;
+    if (!st || st.state === "missing") return `${p}: missing`;
+    // A port keeps its own version line, so show which canonical version it was built from.
+    const from = st.synced_from ? ` from v${st.synced_from}` : "";
+    return `${p}: ${st.state} v${st.version ?? "?"}${from}`;
   });
   return `- ${s.name} (canonical ${s.canonical.platform ?? "none"} v${s.canonical.version}) | ${cells.join(" | ")}`;
 }
@@ -47,7 +69,12 @@ const FilesSchema = z
   .record(z.string(), z.string())
   .describe("Map of relative file path to full file text, e.g. {\"SKILL.md\": \"...\", \"references/voice.md\": \"...\"}.");
 
-export function registerReadTools(server: McpServer): void {
+export interface ToolOpts {
+  /** True on a key-gated connection, which also gets the write tools. */
+  canWrite: boolean;
+}
+
+export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite: false }): void {
   server.registerTool(
     "skills_list",
     {
@@ -110,13 +137,17 @@ export function registerReadTools(server: McpServer): void {
     },
     async () => {
       const [{ bundle, source }, queue, seen, storage] = await Promise.all([loadBundle(), pending(), clients(), queueHealth()]);
-      const plats = Array.from(new Set([...bundle.platforms, ...seen.map((c) => c.platform)]));
+      // Columns are the registry's own platforms. A client that merely connects never becomes a
+      // column; it earns one the first time it submits a skill, which puts it in the bundle.
+      const plats = bundle.platforms;
+      const apps = seen.filter((c) => plats.includes(c.platform));
+      const visitors = seen.filter((c) => !plats.includes(c.platform));
       const skills = Object.values(bundle.skills).sort((a, b) => a.name.localeCompare(b.name));
       const portQueue = skills.flatMap((s) =>
         plats
           .filter((p) => {
             const st = s.platforms[p]?.state ?? "missing";
-            return st === "behind" || (st === "missing" && (CORE_PLATFORMS.includes(p) || seen.some((c) => c.platform === p)));
+            return st === "behind" || st === "unversioned-edit" || (st === "missing" && CORE_PLATFORMS.includes(p));
           })
           .map((p) => `${s.name} -> ${p} (${s.platforms[p]?.state ?? "missing"})`),
       );
@@ -126,9 +157,11 @@ export function registerReadTools(server: McpServer): void {
         generated: bundle.generated,
         platforms: plats,
         skills: skills.map((s) => statusLine(s, plats)),
-        port_queue: portQueue,
+        port_queue: portQueue.length ? portQueue : ["nothing to port, every platform is current"],
         pending_submissions: queue.map((q) => ({ id: q.id, skill: q.skill, platform: q.platform, received: q.received, note: q.note })),
-        connected_apps: seen.map((c) => ({ platform: c.platform, client: c.client_name, first_seen: c.first_seen, last_seen: c.last_seen })),
+        intake: dispatchConfigured() ? "instant (server triggers the repo on every save)" : "scheduled only (SKILLS_DISPATCH_TOKEN not set)",
+        connected_apps: apps.map((c) => ({ platform: c.platform, client: c.client_name, first_seen: c.first_seen, last_seen: c.last_seen })),
+        other_clients: visitors.map((c) => ({ client: c.client_name, last_seen: c.last_seen, note: "not a platform; submits a skill to become one" })),
         queue_storage: storage,
       });
     },
@@ -192,8 +225,204 @@ export function registerReadTools(server: McpServer): void {
         .filter((s) => (s.platforms[me]?.state ?? "missing") !== "current")
         .map((s) => `${s.name}: ${s.platforms[me]?.state ?? "missing"}`);
       return text(
-        `You are connected as "${me}" (${spec(me).label}). Skills needing work for you:\n${todo.join("\n") || "none, all current"}`,
+        `You are connected as "${me}" (${spec(me).label}). Skills needing work for you:\n${todo.join("\n") || "none, all current"}` +
+          `\n\nFor the full first-run routine, call skills_onboard.`,
       );
+    },
+  );
+}
+
+
+// --- Onboarding -----------------------------------------------------------
+// What a brand-new app sees the first time it connects: who it is, what the registry holds, what
+// this app is missing, and the sync routine to offer GJ. GJ's rule is greet first, sync on his OK.
+
+async function onboardingReport(extra: unknown, canWrite: boolean): Promise<string> {
+  const { id, raw } = callerClient(extra);
+  const [{ bundle, source }, seen] = await Promise.all([loadBundle(), clients()]);
+  const me = id?.platform;
+  const skills = Object.values(bundle.skills).sort((a, b) => a.name.localeCompare(b.name));
+  const known = me ? seen.find((c) => c.platform === me) : undefined;
+  const firstTime = !known;
+
+  const mine = me
+    ? skills.map((s) => ({ name: s.name, state: s.platforms[me]?.state ?? "missing" }))
+    : [];
+  const behind = mine.filter((m) => m.state !== "current");
+
+  const who = me
+    ? `You are ${spec(me).label} (platform id "${me}").`
+    : raw
+      ? `This app identifies itself as "${raw}", which is not a platform the registry knows yet. ` +
+        `It becomes one the first time it saves a skill with an explicit platform name.`
+      : `This app did not identify itself. Pass platform explicitly to the other tools.`;
+
+  const lines: Array<string | null> = [
+    "ALL SEEING EYES skill registry, connected.",
+    "",
+    who,
+    firstTime && me ? "This is the first time this app has connected." : null,
+    `Registry: ${skills.length} skills, ${source}, built ${bundle.generated ?? "unknown"}.`,
+    "",
+    me
+      ? behind.length
+        ? `This app is missing or behind on ${behind.length} of ${skills.length}:\n` +
+          behind.map((m) => `  ${m.name}: ${m.state}`).join("\n")
+        : `This app is current on all ${skills.length} skills.`
+      : null,
+    "",
+    "This connection can:",
+    "  read  skills_list, skills_get, skills_status, skills_port_task, skills_whoami, skills_onboard",
+    canWrite
+      ? "  save  skills_submit, skills_sync_platform"
+      : "  save  nothing. This is the read-only URL. Saving needs the key form of the URL, which GJ holds.",
+    "",
+    "ROUTINE",
+    "  1. Done: the report above.",
+    canWrite
+      ? "  2. PUSH UP. Count every skill, Gem, Project, custom GPT, Space or reusable instruction set " +
+        "this app holds for GJ. Tell him the count and the names, then WAIT for his go-ahead. On his " +
+        "yes, call skills_sync_platform once with all of them, full text."
+      : "  2. PUSH UP is unavailable on this URL. Tell GJ if this app holds skills the registry should have.",
+    behind.length
+      ? `  3. PULL DOWN. For each of the ${behind.length} above, call skills_port_task then ` +
+        (canWrite ? "skills_submit." : "hand GJ the ported text, since this URL cannot save.")
+      : "  3. PULL DOWN: nothing to pull, this app is current.",
+    "  4. Report what landed and link github.com/" + REPO + ".",
+    "",
+    "SAY THIS TO GJ NOW, then stop and wait for his answer. His voice: direct, no em dashes, no filler.",
+    `  "Registry is connected. ${skills.length} skills on file` +
+      (me ? (behind.length ? `, this app is behind on ${behind.length}` : ", this app is current on all of them") : "") +
+      `. ` +
+      (canWrite ? `Want me to push this app's skills up to the registry?"` : `This URL is read-only, so I can pull but not save."`),
+  ];
+  return lines.filter((l) => l !== null).join("\n");
+}
+
+export function registerOnboardTool(server: McpServer, opts: ToolOpts): void {
+  server.registerTool(
+    "skills_onboard",
+    {
+      title: "Set this app up with the registry",
+      description:
+        "FIRST RUN. Call this the first time you touch GJ's skill registry in a conversation, before answering anything about " +
+        "skills, syncing or setup. Returns who this app is, what the registry holds, what this app is missing, the sync routine, " +
+        "and the exact greeting to say to GJ. It only reads; it never pushes anything on its own.",
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async (extra) => text(await onboardingReport(extra, opts.canWrite)),
+  );
+}
+
+// --- Prompts: the command list an app shows in its own menu ----------------
+
+export function registerPrompts(server: McpServer, opts: ToolOpts): void {
+  const P: Array<[string, string, string, Record<string, z.ZodString> | undefined, (a: Record<string, string>) => string]> = [
+    [
+      "skills-onboard",
+      "Set up this app with the ALL SEEING EYES registry",
+      "Run the first-run routine: who am I, what is missing, what to sync.",
+      undefined,
+      () =>
+        "Call skills_onboard, follow the routine it returns, and stop at the step that needs my go-ahead.",
+    ],
+    [
+      "skills-status",
+      "Registry status and drift",
+      "Show which platform copies are behind or missing and what is waiting to land.",
+      undefined,
+      () => "Call skills_status and summarise it: what is behind, what is missing, what is queued. Keep it short.",
+    ],
+    [
+      "skills-sync",
+      opts.canWrite ? "Push this app's skills to the registry" : "Push this app's skills (needs the key URL)",
+      "Collect every skill this app holds and save them to the registry.",
+      undefined,
+      () =>
+        opts.canWrite
+          ? "List every skill, Gem, Project, custom GPT, Space or reusable instruction set you hold for me. " +
+            "Tell me the count and the names first, wait for my go-ahead, then call skills_sync_platform once with all of them, full text."
+          : "This connection is read-only, so skills_sync_platform is unavailable. Call skills_onboard and tell me what is missing.",
+    ],
+    [
+      "skills-get",
+      "Load a skill into this conversation",
+      "Fetch one skill's full text for this app and follow it.",
+      { name: z.string().describe("Skill name, e.g. dfs-parlaypro") },
+      (a) => `Call skills_get for "${a.name}", then follow that skill for the rest of this conversation.`,
+    ],
+    [
+      "skills-port",
+      "Tailor a skill to this app",
+      "Convert the canonical version of a skill into this app's format.",
+      { name: z.string().describe("Skill name to port") },
+      (a) =>
+        `Call skills_port_task for "${a.name}", write the ported copy in this app's format, then ` +
+        (opts.canWrite ? "save it with skills_submit (ported_from_canonical: true)." : "show it to me, since this connection cannot save."),
+    ],
+  ];
+
+  for (const [name, title, description, argsSchema, body] of P) {
+    server.registerPrompt(
+      name,
+      argsSchema ? { title, description, argsSchema } : { title, description },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ((args: any) => ({
+        messages: [{ role: "user" as const, content: { type: "text" as const, text: body(args ?? {}) } }],
+      })) as never,
+    );
+  }
+}
+
+// --- ChatGPT compatibility -------------------------------------------------
+// ChatGPT connectors look for tools named exactly "search" and "fetch". They live on their own
+// endpoint so these generic names do not crowd the tool list in every other app.
+
+export function registerChatGptTools(server: McpServer): void {
+  server.registerTool(
+    "search",
+    {
+      title: "Search GJ's skills",
+      description: "Search the ALL SEEING EYES skill registry by name or description. Returns ids to pass to fetch.",
+      inputSchema: { query: z.string().describe("Words to look for in a skill name or description.") },
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async ({ query }) => {
+      const { bundle } = await loadBundle();
+      const q = query.toLowerCase().trim();
+      const hits = Object.values(bundle.skills)
+        .filter((s) => !q || s.name.includes(q) || s.summary.toLowerCase().includes(q))
+        .slice(0, 20)
+        .map((s) => ({
+          id: s.name,
+          title: s.name,
+          url: `https://github.com/${REPO}/tree/main/registry/${s.name}`,
+        }));
+      return json({ results: hits });
+    },
+  );
+
+  server.registerTool(
+    "fetch",
+    {
+      title: "Fetch one skill",
+      description: "Full text of one skill from the ALL SEEING EYES registry. Pass an id returned by search.",
+      inputSchema: { id: z.string().describe("Skill id from search, e.g. dfs-parlaypro") },
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async ({ id }) => {
+      const { bundle } = await loadBundle();
+      const s = findSkill(bundle, id);
+      if (!s) return fail(`No skill with id "${id}". Call search first.`);
+      const cp = s.canonical.platform ?? "claude";
+      const files = s.files[cp] ?? Object.values(s.files)[0] ?? {};
+      return json({
+        id: s.name,
+        title: s.name,
+        text: renderFiles(files),
+        url: `https://github.com/${REPO}/tree/main/registry/${s.name}`,
+        metadata: { canonical_platform: cp, version: s.canonical.version, summary: s.summary },
+      });
     },
   );
 }
@@ -220,7 +449,7 @@ export function registerWriteTools(server: McpServer): void {
       title: "Save a skill to the registry",
       description:
         "Save a new or updated skill from this app into GJ's registry. It is committed to github.com/allsxxing/skills automatically " +
-        "on the next intake run (usually within a few hours), versioned, and drift-checked against every other platform. Use whenever a skill, Gem, Project, " +
+        "within about a minute, versioned, and drift-checked against every other platform. Use whenever a skill, Gem, Project, " +
         "custom GPT, Space, or reusable instruction set is created or edited.",
       inputSchema: {
         name: z.string().describe("Skill name in kebab-case. Reuse the existing name when updating."),
@@ -252,9 +481,10 @@ export function registerWriteTools(server: McpServer): void {
           ported_from_canonical: args.ported_from_canonical,
           client: platform,
         }, writeKey(extra));
+        const d = await dispatchIntake(`submit ${name}@${platform}`);
         return text(
           `Queued ${name} for ${spec(platform).label} (submission ${sub.id}, ${Object.keys(files).length} files). ` +
-            `It lands in github.com/${REPO}/tree/main/registry/${name} on the next intake run (usually within a few hours).`,
+            `${landingNote(d)} Destination: github.com/${REPO}/tree/main/registry/${name}`,
         );
       } catch (e) {
         return fail(`Could not queue: ${(e as Error).message}`);
@@ -315,22 +545,29 @@ export function registerWriteTools(server: McpServer): void {
           results.push(`${name}: failed, ${(e as Error).message}`);
         }
       }
+      const queued = results.filter((r) => r.includes(": queued")).length;
+      const d = queued ? await dispatchIntake(`sync ${platform} x${queued}`) : "nothing queued";
       return text(
-        `${spec(platform).label} sync: ${results.length} items\n${results.join("\n")}\n\nThey land in github.com/${REPO} on the next intake run (usually within a few hours).`,
+        `${spec(platform).label} sync: ${results.length} items, ${queued} queued\n${results.join("\n")}\n\n` +
+          `${queued ? landingNote(d) : "Nothing new to land."} Repo: github.com/${REPO}`,
       );
     },
   );
 }
 
 export const READ_INSTRUCTIONS =
-  "ALL SEEING EYES skill registry for GJ (@allsxxing): the single source of truth for every skill GJ uses across Claude, Gemini, Grok, " +
-  "ChatGPT, Perplexity and any other connected app. skills_list shows everything; skills_get returns this app's copy (or the canonical one); " +
-  "skills_status shows what is behind; skills_port_task gives the brief to tailor a skill to this app. When GJ asks for a skill or protocol by " +
-  "name or slash command, fetch it here before answering.";
+  "ALL SEEING EYES skill registry for GJ Bordallo (@allsxxing): the single source of truth for every skill, Gem, Project, custom GPT " +
+  "and Space he uses across Claude, Gemini, Grok, ChatGPT, Perplexity and any other app he connects.\n\n" +
+  "FIRST RUN: the first time you touch this server in a conversation, call skills_onboard before answering anything about skills, " +
+  "syncing or setup. It tells you which app you are, what the registry holds, what this app is missing, and the exact greeting to " +
+  "give GJ. Follow the routine it returns and stop where it says to wait for him.\n\n" +
+  "AFTER THAT: skills_list shows everything. skills_get returns this app's copy of a skill, or the canonical one. skills_status is the " +
+  "drift dashboard. skills_port_task gives the brief to rewrite a skill in this app's format. When GJ names a skill, protocol or slash " +
+  "command, fetch it here before answering instead of improvising.";
 
 export const WRITE_INSTRUCTIONS =
   READ_INSTRUCTIONS +
-  " This connection can also save. On first connect in a conversation where GJ mentions skills, sync, or setup, call skills_whoami, then " +
-  "skills_sync_platform with every custom skill, Gem, Project, GPT, Space, or reusable instruction set you can see for GJ, full text, so the " +
-  "registry holds this app's versions. Whenever a skill is created or edited here, call skills_submit with the full new text. Never ask GJ to " +
-  "copy, paste, or upload skills by hand; do it through these tools.";
+  "\n\nTHIS CONNECTION CAN SAVE. skills_onboard will hand you the push-up step: count the skills this app holds, tell GJ the count and " +
+  "the names, and wait for his go-ahead before calling skills_sync_platform. Do not push without that yes. Once a skill exists here, " +
+  "call skills_submit every time one is created or edited, with the full new text. Saves trigger the repo immediately and land in about " +
+  "a minute. Never ask GJ to copy, paste or upload a skill by hand.";

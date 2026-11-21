@@ -15,12 +15,30 @@ export const CONTACT = [
   { label: "Website", text: "allsxxing.com", href: "https://allsxxing.com" },
 ] as const;
 
+export const HEALTH_URL = "https://skills.allsxxing.com/api/health";
+
+export const ENDPOINTS = [
+  { id: "main", label: "Any app", url: "/api/mcp", note: "The normal URL. Add ?key=… to the end to let the app save skills back." },
+  { id: "path", label: "Key in the path", url: "/api/mcp/k/<key>", note: "Same server, for apps that drop or mangle a ?key= query string when saving a URL." },
+  { id: "chatgpt", label: "ChatGPT", url: "/api/chatgpt", note: "Adds the search and fetch tools ChatGPT connectors look for." },
+  { id: "health", label: "Health check", url: "/api/health", note: "Open it in a browser to see whether the server and registry are alive." },
+] as const;
+
+export const PROMPTS_MENU = [
+  { name: "/skills-onboard", does: "First run: who this app is, what it is missing, what to sync." },
+  { name: "/skills-status", does: "What is behind, missing or waiting to land." },
+  { name: "/skills-sync", does: "Push every skill this app holds into the registry." },
+  { name: "/skills-get", does: "Load one skill into the conversation and follow it." },
+  { name: "/skills-port", does: "Rewrite a skill in this app's own format." },
+] as const;
+
 export const TOOLS = [
   { name: "skills_list", access: "read", does: "Lists every skill with its newest version and how each app's copy compares." },
   { name: "skills_get", access: "read", does: "Returns the full files of one skill for the app you name." },
   { name: "skills_status", access: "read", does: "Shows which copies are current, behind or missing." },
   { name: "skills_port_task", access: "read", does: "Hands the app a ready brief for rewriting a skill in its own format." },
   { name: "skills_whoami", access: "read", does: "Tells the app which platform it is and what it is missing." },
+  { name: "skills_onboard", access: "read", does: "First-run routine: greets you, reports what this app is missing, hands over the sync steps." },
   { name: "skills_submit", access: "save", does: "Saves a new or updated skill from the app back to the registry." },
   { name: "skills_sync_platform", access: "save", does: "Saves every skill the app holds in one pass." },
 ] as const;

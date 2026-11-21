@@ -63,3 +63,21 @@ python tools/registry.py bump <skill> <platform> [--note TEXT] [--minor|--major]
 python tools/registry.py ingest <queue.json>
 python tools/registry.py fill-hashes [--base REF]
 ```
+
+## Connecting an app
+
+| URL | Use it for |
+| --- | --- |
+| `https://skills.allsxxing.com/api/mcp` | Any app. Read-only. |
+| `https://skills.allsxxing.com/api/mcp?key=<key>` | Same, and the app can save skills back. |
+| `https://skills.allsxxing.com/api/mcp/k/<key>` | Apps that drop or mangle a `?key=` query string. |
+| `https://skills.allsxxing.com/api/chatgpt` | ChatGPT. Adds the `search` and `fetch` tools its connectors require. |
+| `https://skills.allsxxing.com/api/sse` | Deprecated HTTP+SSE transport. Needs `REDIS_URL` on the deployment; returns 503 explaining that when it is unset. |
+| `https://skills.allsxxing.com/api/health` | Plain status page. Check it first when an app will not connect. |
+
+On connect, the server hands the app a first-run instruction: call `skills_onboard`, report what this app
+is missing, and wait for GJ before pushing anything up. Apps that support MCP prompts also show
+`/skills-onboard`, `/skills-status`, `/skills-sync`, `/skills-get` and `/skills-port` in their own menu.
+
+Saves trigger the Skill Intake workflow through `repository_dispatch` and land in about a minute, as long
+as `SKILLS_DISPATCH_TOKEN` is set on the Vercel project. Without it they wait for the schedule.

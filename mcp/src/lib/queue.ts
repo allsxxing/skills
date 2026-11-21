@@ -120,3 +120,40 @@ export async function clients(): Promise<ClientRecord[]> {
   if (!queueReady()) return [];
   return rest<ClientRecord[]>("skill_clients?select=*&order=platform.asc").catch(() => []);
 }
+
+// --- Instant intake -------------------------------------------------------
+// Submissions used to wait for the Skill Intake cron, which GitHub throttles to every few hours.
+// A repository_dispatch fires the same workflow within seconds of a save. Needs a fine-grained
+// token with Actions: read and write on allsxxing/skills, as SKILLS_DISPATCH_TOKEN.
+
+export function dispatchConfigured(): boolean {
+  return Boolean(process.env.SKILLS_DISPATCH_TOKEN);
+}
+
+/** Ask GitHub to run intake now. Returns what happened; never throws. */
+export async function dispatchIntake(reason: string): Promise<"dispatched" | "not configured" | string> {
+  const token = process.env.SKILLS_DISPATCH_TOKEN;
+  if (!token) return "not configured";
+  try {
+    const res = await fetch("https://api.github.com/repos/allsxxing/skills/dispatches", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ event_type: "skills-intake", client_payload: { reason: reason.slice(0, 200) } }),
+    });
+    return res.status === 204 ? "dispatched" : `github ${res.status}`;
+  } catch (e) {
+    return `unreachable: ${(e as Error).message.slice(0, 80)}`;
+  }
+}
+
+/** One line for tool replies: when the queued work actually lands. */
+export function landingNote(dispatch: string): string {
+  return dispatch === "dispatched"
+    ? "Intake was triggered just now, so it lands in the repo within about a minute."
+    : "It lands on the next intake run.";
+}
