@@ -1,3 +1,79 @@
+# ⚡ ALL SEEING EYES Skills Registry
+
+One source of truth for every skill GJ Bordallo ([@allsxxing](https://instagram.com/allsxxing)) runs, shared across
+Claude, Gemini, Grok, ChatGPT, Perplexity and anything else he connects. Skills live in
+[`registry/`](./registry); an MCP server at **skills.allsxxing.com** serves them to any AI app and
+takes new ones back.
+
+| | |
+| --- | --- |
+| Live status | [`registry/STATUS.md`](./registry/STATUS.md) |
+| Server health | https://skills.allsxxing.com/api/health |
+| How the registry works | [`registry/README.md`](./registry/README.md) |
+
+## 1. Connect the app
+
+Add a custom connector (sometimes called an MCP server) in the app, and paste one of these URLs.
+Replace `<key>` with the write key. Without a key the connector can read skills but not save them.
+
+| URL | Use it for |
+| --- | --- |
+| `https://skills.allsxxing.com/api/mcp` | Any app, read only |
+| `https://skills.allsxxing.com/api/mcp?key=<key>` | Any app, read and save |
+| `https://skills.allsxxing.com/api/mcp/k/<key>` | Apps that drop or mangle a `?key=` query string |
+| `https://skills.allsxxing.com/api/chatgpt?key=<key>` | ChatGPT, which needs `search` and `fetch` tools |
+| add `&platform=grok` | When an app's user-agent does not say which app it is |
+
+Where the setting lives, app by app:
+
+- **Claude** — Settings, then Connectors, then Add custom connector. Name it `allsxxing Skills`.
+- **Grok** — Settings, then Connect Apps, then Add MCP Server. Put the URL in Server URL and leave Headers empty.
+- **Gemini, Perplexity, ChatGPT** — look for Connectors, Apps or MCP in settings. If it asks for a
+  transport, choose Streamable HTTP.
+
+If an app refuses to connect, open the health URL in a browser first. If it answers, the server is
+fine and the problem is the app's connector form.
+
+## 2. Paste this into the app
+
+Most apps read the server's own instructions and start the routine themselves. For the ones that
+do not, paste this once in a new conversation:
+
+```text
+You now have the allsxxing Skills connector. Before anything else:
+
+1. Call skills_onboard. It tells you which app you are, what the registry holds, and
+   which skills this app is missing or behind on.
+2. Report back in plain language: how many skills exist, what this app is behind on,
+   and whether this connection can save.
+3. List every custom skill, Gem, Project, GPT, Space or saved instruction set you
+   hold for me. Tell me the count and the names. Then stop and wait for my answer.
+4. Only after I say go, call skills_sync_platform once with all of them, full text.
+5. Then fill the gaps: for each skill this app is missing, call skills_port_task,
+   rewrite it in this app's format, and save it with skills_submit using
+   ported_from_canonical true.
+
+From then on, without being asked: save every skill I create or edit here with
+skills_submit, and whenever I name a skill or slash command, fetch it with
+skills_get before answering. Never ask me to copy, paste or upload a skill by hand.
+```
+
+## 3. Commands
+
+Apps that support MCP prompts show these in their own menu:
+
+| Command | Does |
+| --- | --- |
+| `/skills-onboard` | First run: which app this is, what it is missing, what to sync |
+| `/skills-status` | What is behind, missing or waiting to land |
+| `/skills-sync` | Push every skill this app holds into the registry |
+| `/skills-get` | Load one skill into the conversation and follow it |
+| `/skills-port` | Rewrite a skill in this app's own format |
+
+Saves are committed to this repo automatically, usually within a minute.
+
+---
+
 > **Note:** This repository contains Anthropic's implementation of skills for Claude. For information about the Agent Skills standard, see [agentskills.io](http://agentskills.io).
 
 [![skills.sh](https://skills.sh/b/anthropics/skills)](https://skills.sh/anthropics/skills)
