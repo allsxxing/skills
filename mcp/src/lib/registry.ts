@@ -34,7 +34,9 @@ let cache: { at: number; bundle: Bundle; source: string } | null = null;
 export async function loadBundle(): Promise<{ bundle: Bundle; source: string }> {
   if (cache && Date.now() - cache.at < TTL_MS) return cache;
   try {
-    const res = await fetch(`${RAW}/registry/bundle.json`, { cache: "no-store" });
+    // Vercel's Data Cache keeps this across invocations, so a cold start no longer pays a round
+    // trip to GitHub. The in-process cache below still short-circuits repeat calls in one instance.
+    const res = await fetch(`${RAW}/registry/bundle.json`, { next: { revalidate: 60 } });
     if (res.ok) {
       const bundle = (await res.json()) as Bundle;
       cache = { at: Date.now(), bundle, source: "live (GitHub main)" };

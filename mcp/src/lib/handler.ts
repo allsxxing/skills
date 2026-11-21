@@ -6,6 +6,7 @@
 //                           Streamable HTTP. mcp-handler needs a Redis URL to hold those sessions.
 import { createMcpHandler } from "mcp-handler";
 import { classifyClient } from "@/lib/platforms";
+import { consume, tooMany } from "@/lib/limits";
 import { recordClient, writeKeyValid } from "@/lib/queue";
 import {
   READ_INSTRUCTIONS,
@@ -112,6 +113,11 @@ export function withCors(response: Response): Response {
 
 /** Shared entry point for every MCP endpoint. */
 export async function serve(request: Request, opts: { chatgpt?: boolean; pathKey?: string } = {}): Promise<Response> {
+  // Preflight and session teardown are free; only real work costs a token.
+  if (request.method === "POST") {
+    const verdict = consume(request);
+    if (!verdict.ok) return tooMany(verdict);
+  }
   const tasks = noteClient(request);
   const key = presentedKey(request, opts.pathKey);
   const canWrite = Boolean(key) && (await writeKeyValid(key as string));
