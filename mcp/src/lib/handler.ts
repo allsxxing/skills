@@ -110,8 +110,13 @@ export async function serve(request: Request, opts: { chatgpt?: boolean; pathKey
   const canonical = url.pathname === "/api/sse" || url.pathname === "/api/message" ? url.pathname : "/api/mcp";
   url.pathname = canonical;
   url.searchParams.delete("key");
+  url.searchParams.delete("platform");
 
   const headers = new Headers(request.headers);
+  // An app whose user-agent says nothing useful can pin its identity with ?platform=grok on the
+  // connector URL. Explicit always beats sniffing.
+  const pinned = new URL(request.url).searchParams.get("platform");
+  if (pinned) headers.set("x-mcp-client", pinned);
   if (canWrite) headers.set("x-skills-write-key", key as string);
   else headers.delete("x-skills-write-key"); // never let a caller forge it
   const forwarded = new Request(url, {

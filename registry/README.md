@@ -74,6 +74,7 @@ python tools/registry.py fill-hashes [--base REF]
 | `https://skills.allsxxing.com/api/chatgpt` | ChatGPT. Adds the `search` and `fetch` tools its connectors require. |
 | `https://skills.allsxxing.com/api/sse` | Deprecated HTTP+SSE transport. Needs `REDIS_URL` on the deployment; returns 503 explaining that when it is unset. |
 | `https://skills.allsxxing.com/api/health` | Plain status page. Check it first when an app will not connect. |
+| `…/api/mcp?platform=grok` | Pin the platform when an app's user-agent does not say which app it is. Combines with a key. |
 
 On connect, the server hands the app a first-run instruction: call `skills_onboard`, report what this app
 is missing, and wait for GJ before pushing anything up. Apps that support MCP prompts also show

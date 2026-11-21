@@ -22,6 +22,7 @@ export const ENDPOINTS = [
   { id: "path", label: "Key in the path", url: "/api/mcp/k/<key>", note: "Same server, for apps that drop or mangle a ?key= query string when saving a URL." },
   { id: "chatgpt", label: "ChatGPT", url: "/api/chatgpt", note: "Adds the search and fetch tools ChatGPT connectors look for." },
   { id: "health", label: "Health check", url: "/api/health", note: "Open it in a browser to see whether the server and registry are alive." },
+  { id: "pin", label: "Wrong app name", url: "/api/mcp?platform=grok", note: "Add ?platform= when an app reports a useless user-agent and the registry cannot tell which app it is." },
 ] as const;
 
 export const PROMPTS_MENU = [
