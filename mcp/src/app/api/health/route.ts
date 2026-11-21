@@ -39,6 +39,17 @@ export async function GET(): Promise<Response> {
       legacy_sse: SSE_AVAILABLE ? "/api/sse" : "disabled (set REDIS_URL or KV_URL)",
       queue_json: "/api/queue",
     },
+    auth: {
+      mode: "no sign-in; the write key is optional and only unlocks the two save tools",
+      key_accepted_as: [
+        "Authorization: Bearer <key>   (preferred: connector UIs store headers encrypted)",
+        "X-Skills-Key: <key>           (use when the UI reserves Authorization)",
+        "X-API-Key: <key>",
+        "/api/mcp/k/<key>              (path form, for UIs that mangle query strings)",
+        "?key=<key>                    (least safe: visible wherever the URL is shown)",
+      ],
+      oauth: "not implemented; no authorization server is advertised, so clients correctly detect no sign-in",
+    },
     repo: `https://github.com/${REPO}`,
   };
   return new Response(JSON.stringify(body, null, 2), {

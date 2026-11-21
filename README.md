@@ -18,11 +18,28 @@ Replace `<key>` with the write key. Without a key the connector can read skills 
 
 | URL | Use it for |
 | --- | --- |
-| `https://skills.allsxxing.com/api/mcp` | Any app, read only |
-| `https://skills.allsxxing.com/api/mcp?key=<key>` | Any app, read and save |
-| `https://skills.allsxxing.com/api/mcp/k/<key>` | Apps that drop or mangle a `?key=` query string |
-| `https://skills.allsxxing.com/api/chatgpt?key=<key>` | ChatGPT, which needs `search` and `fetch` tools |
-| add `&platform=grok` | When an app's user-agent does not say which app it is |
+| `https://skills.allsxxing.com/api/mcp` | Any app |
+| `https://skills.allsxxing.com/api/chatgpt` | ChatGPT, which needs `search` and `fetch` tools |
+| add `?platform=grok` | When an app's user-agent does not say which app it is |
+
+### Authentication
+
+The server has **no sign-in**. Reading is open, because the registry is a public repo. Saving needs
+a write key, and the connector decides where that key goes. In order of safety:
+
+| Where the key goes | Notes |
+| --- | --- |
+| `Authorization: Bearer <key>` header | **Preferred.** Connector UIs store headers encrypted and never show them again. |
+| `X-Skills-Key: <key>` header | Use when the UI reserves `Authorization` for itself. `X-API-Key` also works. |
+| `https://.../api/mcp/k/<key>` | Path form, for UIs that mangle query strings. The key is in the URL. |
+| `https://.../api/mcp?key=<key>` | Least safe. The key is visible anywhere the connector URL is shown, logged or screenshotted. |
+
+In Claude's **Add custom connector** dialog: paste the plain URL, leave Authentication on
+**No sign-in**, then under **Request headers** add `Authorization` with the value `Bearer <key>`.
+Leave Transport on Streamable HTTP. Nothing goes in the URL.
+
+OAuth is not implemented. The server advertises no authorization server, which is why clients
+correctly detect "No sign-in".
 
 Where the setting lives, app by app:
 

@@ -55,13 +55,27 @@ const handlers: Record<Variant, ReturnType<typeof build>> = {
   "chatgpt-write": build("chatgpt-write"),
 };
 
-/** The key presented by this request: ?key=, Authorization: Bearer, or a /k/<key> path segment. */
+/**
+ * The write key presented by this request. Checked in order of how safe each place is:
+ *   1. A request header, which connector UIs store encrypted and never show again. Preferred.
+ *   2. A /k/<key> path segment, for apps that mangle query strings.
+ *   3. A ?key= query parameter, which is the least safe because it is visible wherever the
+ *      connector URL is displayed, logged or screenshotted.
+ * Several header names are accepted because connector UIs differ on which ones they let you set,
+ * and some reserve Authorization for their own use.
+ */
+const KEY_HEADERS = ["x-skills-key", "x-api-key", "x-skills-write-key-in", "skills-key"];
+
 export function presentedKey(request: Request, pathKey?: string): string | null {
+  const auth = request.headers.get("authorization") ?? "";
+  if (auth.toLowerCase().startsWith("bearer ")) return auth.slice(7).trim() || null;
+  for (const h of KEY_HEADERS) {
+    const v = request.headers.get(h);
+    if (v) return v.trim();
+  }
   if (pathKey) return decodeURIComponent(pathKey).trim();
   const fromQuery = new URL(request.url).searchParams.get("key");
-  if (fromQuery) return fromQuery.trim();
-  const auth = request.headers.get("authorization") ?? "";
-  return auth.toLowerCase().startsWith("bearer ") ? auth.slice(7).trim() : null;
+  return fromQuery ? fromQuery.trim() : null;
 }
 
 /**
@@ -119,6 +133,7 @@ export async function serve(request: Request, opts: { chatgpt?: boolean; pathKey
   if (pinned) headers.set("x-mcp-client", pinned);
   if (canWrite) headers.set("x-skills-write-key", key as string);
   else headers.delete("x-skills-write-key"); // never let a caller forge it
+  for (const h of KEY_HEADERS) headers.delete(h); // the key is consumed here, not passed on
   const forwarded = new Request(url, {
     method: request.method,
     headers,
