@@ -130,6 +130,32 @@ export function dispatchConfigured(): boolean {
   return Boolean(process.env.SKILLS_DISPATCH_TOKEN);
 }
 
+/**
+ * Whether the dispatch token is actually usable right now. A token that is missing, revoked,
+ * expired or scoped wrong all look identical from the outside until a save silently falls back to
+ * the slow schedule, so the health check asks GitHub instead of trusting that the variable is set.
+ */
+export async function dispatchTokenHealth(): Promise<string> {
+  const token = process.env.SKILLS_DISPATCH_TOKEN;
+  if (!token) return "not configured: saves wait for the schedule";
+  try {
+    const res = await fetch("https://api.github.com/repos/allsxxing/skills", {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" },
+      cache: "no-store",
+    });
+    if (res.status === 401) return "token rejected (expired or revoked): saves wait for the schedule";
+    if (res.status === 404) return "token cannot see allsxxing/skills: check its repository access";
+    if (!res.ok) return `github ${res.status}`;
+    // Contents: write is what POST /dispatches needs; GitHub reports it on the repo payload.
+    const repo = (await res.json()) as { permissions?: { push?: boolean } };
+    return repo.permissions?.push
+      ? "ready: saves trigger the repo immediately"
+      : "token lacks Contents write: saves wait for the schedule";
+  } catch (e) {
+    return `unreachable: ${(e as Error).message.slice(0, 60)}`;
+  }
+}
+
 /** Ask GitHub to run intake now. Returns what happened; never throws. */
 export async function dispatchIntake(reason: string): Promise<"dispatched" | "not configured" | string> {
   const token = process.env.SKILLS_DISPATCH_TOKEN;

@@ -80,17 +80,35 @@ export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite
     {
       title: "List skills",
       description:
-        "Every skill in GJ's ALL SEEING EYES registry with its canonical (newest) version and the state of each AI platform's copy " +
-        "(current, behind, missing). Use first to see what exists.",
-      inputSchema: { platform: z.string().optional().describe("Only show this platform's column, e.g. grok") },
+        "Names, summaries and per-platform versions of the skills in GJ's registry. Returns a page of results, newest canonical " +
+        "version per skill. Does not return skill contents: use skills_get for one skill's files, or skills_status for the drift " +
+        "dashboard and the port queue.",
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+      inputSchema: {
+        platform: z
+          .string()
+          .optional()
+          .describe("Narrow the version columns to one platform, e.g. grok. Omit to show every platform."),
+        search: z.string().optional().describe("Only skills whose name or summary contains this text."),
+        limit: z.number().int().min(1).max(100).default(25).describe("Skills per page. Hard cap 100."),
+        offset: z.number().int().min(0).default(0).describe("Skip this many skills. Use next_offset from a previous call."),
+      },
     },
-    async ({ platform }) => {
+    async ({ platform, search, limit, offset }) => {
       const { bundle, source } = await loadBundle();
       const plats = platform ? [slugify(platform)] : bundle.platforms;
-      const lines = Object.values(bundle.skills)
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((s) => `${statusLine(s, plats)}\n  ${s.summary.slice(0, 200)}`);
-      return text(`Registry ${REPO} (${source}), ${lines.length} skills\n\n${lines.join("\n")}`);
+      const q = search?.toLowerCase().trim();
+      const all = Object.values(bundle.skills)
+        .filter((s) => !q || s.name.includes(q) || s.summary.toLowerCase().includes(q))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const page = all.slice(offset, offset + limit);
+      const lines = page.map((s) => `${statusLine(s, plats)}\n  ${s.summary.slice(0, 160)}`);
+      const more = offset + page.length < all.length;
+      return text(
+        `Registry ${REPO} (${source}), showing ${page.length} of ${all.length} skills` +
+          `${q ? ` matching "${search}"` : ""}\n\n${lines.join("\n")}` +
+          (more ? `\n\n${all.length - offset - page.length} more. Call again with offset ${offset + page.length}.` : ""),
+      );
     },
   );
 
@@ -99,11 +117,16 @@ export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite
     {
       title: "Get a skill",
       description:
-        "Full files of one skill for one platform. Omit platform to get the version for the app calling this tool, " +
-        "falling back to the canonical copy when that app has none yet (then run skills_port_task to tailor it).",
+        "The full file contents of one skill, for one platform. Omit platform to get the calling app's own copy, falling back to " +
+        "the canonical copy when that app has none. Returns file text, which can be long. For names and versions only, use " +
+        "skills_list; for a conversion brief rather than raw files, use skills_port_task.",
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
       inputSchema: {
-        name: z.string().describe("Skill name, e.g. dfs-parlaypro"),
-        platform: z.string().optional().describe("claude, gemini, grok, chatgpt, perplexity, or any connected app id"),
+        name: z.string().min(1).max(64).describe("Skill name in kebab-case, e.g. dfs-parlaypro. Get names from skills_list."),
+        platform: z
+          .string()
+          .optional()
+          .describe("claude, gemini, grok, chatgpt, perplexity, or any connected app id. Omit to use the calling app."),
       },
     },
     async ({ name, platform }, extra) => {
@@ -132,10 +155,18 @@ export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite
     {
       title: "Registry status",
       description:
-        "Drift dashboard: which platform copies are behind or missing (the port queue), submissions waiting to land in the repo, " +
-        "and which AI apps have connected to this registry.",
+        "Drift dashboard: how many platform copies are behind or missing, what is queued to land in the repo, and which apps have " +
+        "connected. Returns counts and the work that needs doing; pass detail \"full\" for every row. Covers the whole registry, " +
+        "unlike skills_whoami which covers only the calling app.",
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+      inputSchema: {
+        detail: z
+          .enum(["summary", "full"])
+          .default("summary")
+          .describe("summary returns counts and the port queue. full adds a line per skill and every connected client."),
+      },
     },
-    async () => {
+    async ({ detail }) => {
       const [{ bundle, source }, queue, seen, storage] = await Promise.all([loadBundle(), pending(), clients(), queueHealth()]);
       // Columns are the registry's own platforms. A client that merely connects never becomes a
       // column; it earns one the first time it submits a skill, which puts it in the bundle.
@@ -151,19 +182,28 @@ export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite
           })
           .map((p) => `${s.name} -> ${p} (${s.platforms[p]?.state ?? "missing"})`),
       );
-      return json({
+      const base = {
         registry: `https://github.com/${REPO}/blob/main/registry/STATUS.md`,
         source,
         generated: bundle.generated,
         platforms: plats,
-        skills: skills.map((s) => statusLine(s, plats)),
+        counts: {
+          skills: skills.length,
+          ports_needed: portQueue.length,
+          pending_submissions: queue.length,
+        },
         port_queue: portQueue.length ? portQueue : ["nothing to port, every platform is current"],
         pending_submissions: queue.map((q) => ({ id: q.id, skill: q.skill, platform: q.platform, received: q.received, note: q.note })),
         intake: dispatchConfigured() ? "instant (server triggers the repo on every save)" : "scheduled only (SKILLS_DISPATCH_TOKEN not set)",
         connected_apps: apps.map((c) => ({ platform: c.platform, client: c.client_name, first_seen: c.first_seen, last_seen: c.last_seen })),
         other_clients: visitors.map((c) => ({ client: c.client_name, last_seen: c.last_seen, note: "not a platform; submits a skill to become one" })),
         queue_storage: storage,
-      });
+      };
+      return json(
+        detail === "full"
+          ? { ...base, skills: skills.map((s) => statusLine(s, plats)) }
+          : { ...base, note: 'Per-skill lines omitted. Call again with detail "full" for every row.' },
+      );
     },
   );
 
@@ -174,8 +214,9 @@ export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite
       description:
         "Conversion brief for bringing one platform's copy up to the canonical version: the canonical files, the target's current copy, " +
         "and the target platform's format rules. Write the ported copy, then submit it with skills_submit (ported_from_canonical: true).",
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
       inputSchema: {
-        name: z.string(),
+        name: z.string().min(1).max(64).describe("Skill name to port, e.g. dfs-parlaypro."),
         platform: z.string().optional().describe("Target platform. Omit to target the app calling this tool."),
       },
     },
@@ -215,7 +256,10 @@ export function registerReadTools(server: McpServer, opts: ToolOpts = { canWrite
     "skills_whoami",
     {
       title: "Which platform am I",
-      description: "Detects which AI app is calling this server and lists the skills that app is missing or running behind on.",
+      description:
+        "Which AI app the registry thinks is calling, and the skills that app is missing or behind on. Scoped to the caller; for " +
+        "the whole registry use skills_status, and for the full first-run routine use skills_onboard.",
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     async (extra) => {
       const me = callerPlatform(extra);
@@ -305,9 +349,9 @@ export function registerOnboardTool(server: McpServer, opts: ToolOpts): void {
     {
       title: "Set this app up with the registry",
       description:
-        "FIRST RUN. Call this the first time you touch GJ's skill registry in a conversation, before answering anything about " +
-        "skills, syncing or setup. Returns who this app is, what the registry holds, what this app is missing, the sync routine, " +
-        "and the exact greeting to say to GJ. It only reads; it never pushes anything on its own.",
+        "The first-run report for this app: which app the registry thinks it is, how many skills the registry holds, which ones " +
+        "this app is missing or behind on, whether this connection can save, and a suggested order of work. Read-only; it never " +
+        "pushes anything. Broader than skills_whoami, which returns only the missing list.",
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     async (extra) => text(await onboardingReport(extra, opts.canWrite)),
@@ -448,9 +492,9 @@ export function registerWriteTools(server: McpServer): void {
     {
       title: "Save a skill to the registry",
       description:
-        "Save a new or updated skill from this app into GJ's registry. It is committed to github.com/allsxxing/skills automatically " +
-        "within about a minute, versioned, and drift-checked against every other platform. Use whenever a skill, Gem, Project, " +
-        "custom GPT, Space, or reusable instruction set is created or edited.",
+        "Saves one skill from this app into GJ's registry. The copy is queued, committed to github.com/allsxxing/skills, versioned, " +
+        "and drift-checked against every other platform. One skill per call; for a whole app's worth at once use skills_sync_platform.",
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
       inputSchema: {
         name: z.string().describe("Skill name in kebab-case. Reuse the existing name when updating."),
         platform: z.string().optional().describe("Platform this copy belongs to. Omit to use the calling app."),
@@ -497,9 +541,9 @@ export function registerWriteTools(server: McpServer): void {
     {
       title: "Sync every skill this app holds",
       description:
-        "Bulk intake. Push every custom skill, Gem, Project, custom GPT, Space, saved prompt protocol, or reusable instruction set this app " +
-        "holds for GJ into the registry in one call. Run this the first time an app connects, and any time GJ asks to sync. " +
-        "Include each item's full text; identical copies are skipped automatically.",
+        "Saves many skills from this app into GJ's registry in one call: custom skills, Gems, Projects, custom GPTs, Spaces or saved " +
+        "instruction sets, each with its full text. Identical copies are skipped. For a single skill use skills_submit.",
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
       inputSchema: {
         platform: z.string().optional().describe("Omit to use the calling app."),
         skills: z

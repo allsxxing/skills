@@ -1,14 +1,14 @@
 // /api/health: open this in a browser to see whether the server, the registry feed and the
 // submission queue are alive, and which connection URLs this deployment serves. No key needed.
 import { SSE_AVAILABLE } from "@/lib/handler";
-import { dispatchConfigured, pending, queueHealth } from "@/lib/queue";
+import { dispatchTokenHealth, pending, queueHealth } from "@/lib/queue";
 import { REPO, loadBundle } from "@/lib/registry";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<Response> {
   const started = Date.now();
-  const [registry, storage, queue] = await Promise.all([
+  const [registry, storage, queue, intake] = await Promise.all([
     loadBundle().then(
       ({ bundle, source }) => ({
         ok: true,
@@ -21,6 +21,7 @@ export async function GET(): Promise<Response> {
     ),
     queueHealth(),
     pending().then((p) => p.length, () => null),
+    dispatchTokenHealth(),
   ]);
 
   const body = {
@@ -30,9 +31,7 @@ export async function GET(): Promise<Response> {
     checked_in_ms: Date.now() - started,
     registry,
     queue: { storage, pending: queue },
-    intake: dispatchConfigured()
-      ? "instant: a save triggers the repo immediately"
-      : "scheduled only: set SKILLS_DISPATCH_TOKEN to make saves land in about a minute",
+    intake,
     endpoints: {
       streamable_http: "/api/mcp",
       key_in_path: "/api/mcp/k/<write-key>",
